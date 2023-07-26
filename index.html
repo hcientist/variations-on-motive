@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit Test </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link rel="icon" href="https://fav.farm/🙏">
+</head>
+
+<body class="container">
+  <h1>Unit Test NEA Create</h1>
+  <p>This is a small example to help ensure that the NEA Create experiences are being implemented correctly to the
+    designs. Ideally, we can store the "chord scale buckets" (<code>tonic</code>, <code>dominant</code>, and
+    <code>subdominant</code> as <a href="#chord-scale-buckets">defined below</a>) using only 3 flat.io scores for a
+    single key signature.
+  </p>
+
+  <main>
+    <h2>Tests</h2>
+    <p>Our tests will work with 2 <strong>pieces</strong> of repertoire: <a target="_blank" rel="noopener noreferrrer"
+        href="https://benguerrero.com/">Ben Guerrero's</a> simplifications of <a href="https://www.stevedanyew.com/"
+        target="_blank" rel="noopener noreferrrer">Steve Danyew's</a> arrangements of <em>Deep River</em> and <em>Down
+        by the Riverside</em>. For each of these pieces, we will consider 2 students, <code>Ayesha</code> who plays a
+      <code>piccolo</code> and <code>Bazual</code> who plays a (B♭) <code>trumpet</code>
+    </p>
+    <ol>
+      <li>
+        <h3>Deep River (in E♭)</h3>
+        <div id="deep-river-piccolo"></div>
+        <ol>
+          <li>
+            <h4>Ayesha (on Piccolo)</h4>
+            <p>To perform the melody she would use the score above.</p>
+            <h5>Score for Create</h5>
+            <p>To compose for any of the Create conditions (for this piece), Ayesha will be given this kind of score.
+            </p>
+            <div id="deep-river-piccolo-create"></div>
+            <h5>Chord Scale Buckets</h5>
+            <p>Ayseha's instrument is considered Concert Pitch, but within MusicCPR, we further denote that it's <code>Concert Pitch TC 8va</code>, which means an octave higher than other <code>Concert Pitch TC</code> instruments (e.g. Oboe, Percussion, Piano). Below are the chord scale buckets to which Ayesha will be asked to limit herself. The pitches here depend on (1) the fact that her instrument is concert pitch (not transposed from concert pitch to another), (2) the fact that the piece is composed in (for?) <code>E♭</code>.</p>
+            <h6>Tonic</h6>
+            <div id="tonic"></div>
+            <h6>Subdominant</h6>
+            <div id="subdominant"></div>
+            <h6>Dominant</h6>
+            <div id="dominant"></div>
+          </li>
+          <li>
+            <h4>Bazual (on Trumpet)</h4>
+            <p>To perform the melody they would use this B♭ version of Deep River.</p>
+            <div id="deep-river-bb"></div>
+            <h5>Score for Create</h5>
+            <p>To compose for any of the Create conditions (for this piece), Bazual will be given this kind of score.
+            </p>
+            <div id="deep-river-bb-create"></div>
+            <h5>Chord Scale Buckets</h5>
+            <p>These are the chord scale buckets to which Bazual will be asked to limit themself</p>
+            <h6>Tonic</h6>
+            <div id="tonic"></div>
+            <h6>Subdominant</h6>
+            <div id="subdominant"></div>
+            <h6>Dominant</h6>
+            <div id="dominant"></div>
+          </li>
+        </ol>
+      </li>
+    </ol>
+  </main>
+  <section>
+    <h2>Vocabulary</h2>
+    <section>
+      <h3>Chromatic Scale</h3>
+      <p>The chromatic scale as defined here lists the 12 semitones in order from lowest to highest for a single octave.
+        Note: 5 of the 12 semitones have 2 representations: 1 that's a lower "note letter" that uses a "sharp"
+        (<code>♯</code>) and one that's a higher "note letter" that uses a "flat" (<code>♭</code>). To decide which is
+        the appropriate one to show/render, we should look at the piece of repertoire (well, particularly the
+        "transposition of the piece into the key appropriate for a given instrument") to tell whether the key signature
+        contains flats (in which case the flats are used) or not (in which case the sharps are used).</p>
+      <ol>
+        <li><code>C</code></li>
+        <li>
+          <ol>
+            <li><code>C♯</code></li>
+            <li><code>D♭</code></li>
+          </ol>
+        </li>
+        <li><code>D</code></li>
+        <li>
+          <ol>
+            <li><code>D♯</code></li>
+            <li><code>E♭</code></li>
+          </ol>
+        </li>
+        <li><code>E</code></li>
+        <li><code>F</code></li>
+        <li>
+          <ol>
+            <li><code>F♯</code></li>
+            <li><code>G♭</code></li>
+          </ol>
+        </li>
+        <li><code>G</code></li>
+        <li>
+          <ol>
+            <li><code>G♯</code></li>
+            <li><code>A♭</code></li>
+          </ol>
+        </li>
+        <li><code>A</code></li>
+        <li>
+          <ol>
+            <li><code>A♯</code></li>
+            <li><code>B♭</code></li>
+          </ol>
+        </li>
+        <li><code>B</code></li>
+      </ol>
+    </section>
+    <section id="chord-scale-buckets">
+      <h3>Chord Scale Buckets</h3>
+      <p>The chord scale buckets below are for the key of E flat (<code>Eb</code>). The <code>scale degrees</code> are
+        the pitches for a certain chord scale bucket in a given key. Note: all of these chord scale buckets span 2
+        octaves since C is the lowest "note letter" ("pitch"?) in a given octave.</p>
+      <dl>
+        <dt>tonic</dt>
+        <dd>Eb, F, G, Bb, C</dd>
+        <dt>subdominant</dt>
+        <dd>F, Ab, Bb, C, Eb</dd>
+        <dt>dominant</dt>
+        <dd>D, F, Ab, Bb, C</dd>
+      </dl>
+    </section>
+  </section>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script src="https://prod.flat-cdn.com/embed-js/v1.5.1/embed.min.js"></script>
+  <script>
+    const appId = '60a51c906bcde01fc75a3ad0';
+    const NEA_CREATE_TOOLSET_ID = '64be80de738efff96cc27edd';
+    const deepRiverEb = { //NOTE: right now this is a placeholder from the "original" (unsimplified version)
+      scoreId: '62ec124b77e86e00128f5ee1',
+      sharingKey: 'bb8fed0fd6d20b67fd8e2cc93f6d809122eac97377d7cdacf251579974347cbc990bc4516be5245b53cec82300cf261cf46af892be9b31ac0510176ab51cedac'
+    }
+
+    const deepRiverBb = {
+      scoreId: '62ec124a91d8e600128ceb0b',
+      sharingKey: '21f10c88735a17851972c78df5490eea1548045045cf805612b700a2ab2e61ad5468e260b0ccf552f1588a0b4f111193724eb5b60df42c432b75acfe47c02e24'
+    }
+
+    const chordScaleBucketsInEb = {
+      tonic: {
+        scoreId: '64c0993a9638a82f130dc549',
+        sharingKey: 'bd6ef69e50c7822c1f2fc5b262c553b048cf1f60add3ee9cdb1e85536b8f0d18de20b69fe6089b40e4910ba68d762c4218f00410d5d07368f021ae7298fb99c7'
+      },
+      subdominant: {
+        scoreId: '64c099d94d7650a3d9ba7598',
+        sharingKey: '19663d1b0e19b5f9ff11ad28b80c45546693499c94ed5d7c992bdeb9f7c58e968a219144a3aabaa05845947089607d51d25a37fe94a3ca6fcf14e67cff361c3d'
+      },
+      dominant: {
+        scoreId: '64c09a22168dab0ff8733c35',
+        sharingKey: 'adaf25a2ea6be22b81af0658dbff5d0537625d171f9c2fed3406c6ad39a24c3ffaf87cfc662672f5aa11d0d8d9f09989567bde6c8d028586b11873d7596030c0'
+      }
+    }
+
+    const downByTheRiversideEb = { //NOTE: right now this is a placeholder from the "original" (unsimplified version)
+      scoreId: '62ec10e75205540013def1f5',
+      sharingKey: 'a1f3314246124eee01098a336c17d7a081380e62c30e147e1c6b3606e767448dd01e478a25a03fc450bc05ca62cb1f9696cae7486e8deacc5dc31bcf042b3a28'
+    }
+
+    const downByTheRiversideBb = {
+      scoreId: '62ec10e6d761f20012ce1b2f',
+      sharingKey: '0e02133ac03e0c10401a5cc48096b8c31e94246a0e1e7847f2336a1a950bf488dd0013d05af7f2c9cf40aca41bf36be17d872a01746c90de4249f39ca36f7b12'
+    }
+
+    const drEbContainer = document.getElementById("deep-river-piccolo");
+    const drEbEmbed = new Flat.Embed(drEbContainer, {
+      "width": "100%",
+      "height": "300",
+      "score": deepRiverEb.scoreId,
+      "embedParams": {
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": deepRiverEb.sharingKey
+      },
+    });
+
+
+    const drEbCreateContainer = document.getElementById("deep-river-piccolo-create");
+    const drEbCreateEmbed = new Flat.Embed(drEbCreateContainer, {
+      "width": "100%",
+      "height": "400",
+      "score": deepRiverEb.scoreId,
+      "embedParams": {
+        "mode": "edit",
+        "toolsetId": NEA_CREATE_TOOLSET_ID,
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": deepRiverEb.sharingKey
+      },
+    });
+
+    const ebTonicBucketContainer = document.getElementById("tonic");
+      const ebTonicBucketEmbed = new Flat.Embed(ebTonicBucketContainer, {
+        "width": "100%",
+        "height": "300",
+        "score": chordScaleBucketsInEb.tonic.scoreId,
+        "embedParams": {
+          "branding": false,
+          "controlsPlay": false,
+          "appId": appId,
+          "sharingKey": chordScaleBucketsInEb.tonic.sharingKey
+        },
+      });
+      const ebSubdominantBucketContainer = document.getElementById("subdominant");
+        const ebSubdominantBucketEmbed = new Flat.Embed(ebSubdominantBucketContainer, {
+          "width": "100%",
+          "height": "300",
+          "score": chordScaleBucketsInEb.subdominant.scoreId,
+          "embedParams": {
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+            "sharingKey": chordScaleBucketsInEb.subdominant.sharingKey
+          },
+        });
+
+        const ebDominantBucketContainer = document.getElementById("dominant");
+          const ebDominantBucketEmbed = new Flat.Embed(ebDominantBucketContainer, {
+            "width": "100%",
+            "height": "300",
+            "score": chordScaleBucketsInEb.dominant.scoreId,
+            "embedParams": {
+              "branding": false,
+              "controlsPlay": false,
+              "appId": appId,
+              "sharingKey": chordScaleBucketsInEb.dominant.sharingKey
+            },
+          });
+    
+
+  </script>
+</body>
+
+</html>

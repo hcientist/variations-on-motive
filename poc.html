@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variations on Motive POC</title>
+</head>
+<body>
+  <div id="embed-motive-container"></div>
+  <div id="embed-variation-container"></div>
+  <script src="https://prod.flat-cdn.com/embed-js/v1.5.1/embed.min.js"></script>
+  <script>
+    const appId = '60a51c906bcde01fc75a3ad0';
+    const NEA_CREATE_TOOLSET_ID='64be80de738efff96cc27edd';
+
+    // const motiveScoreId = '647e0639e9e8c299af2e5799';
+    // const motiveSharingKey = '1af986d74ed7d96068815dc7c797acdc9dacc9ebd9684c0b2cda38be7c4b09f5190de3bf06b26b3d29af45f79f4939ed8532ae8107d796a47d7f7f1dc8c95009';
+
+
+    const motiveScoreId = '62ec10e6d761f20012ce1b2f';
+      const motiveSharingKey = '0e02133ac03e0c10401a5cc48096b8c31e94246a0e1e7847f2336a1a950bf488dd0013d05af7f2c9cf40aca41bf36be17d872a01746c90de4249f39ca36f7b12';
+
+    const emptyVariationScoreId = '647e0783d82978cff39e85d3';
+    const emptyVariationSharingKey = '13aff2a9b211e04c77b0621f4361f2f5da02291d6108a8f5523a279e2a36aaecc6130d51835bd95305808977f6a53467f19659d6062fa599e525a071ea27e767';
+
+    let motiveContainer = document.getElementById("embed-motive-container");
+    let variationContainer = document.getElementById("embed-variation-container");
+
+    window.embedMotive = new Flat.Embed(motiveContainer, {
+      "width": "100%",
+      "height": "450",
+      "score": motiveScoreId,
+      "embedParams": {
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": motiveSharingKey
+      },
+    });
+
+    let embedVariation = new Flat.Embed(variationContainer, {
+        "width": "100%",
+        "height": "450",
+        "score": emptyVariationScoreId,
+        "embedParams": {
+          "mode": "edit",
+          "branding": false,
+          "controlsPlay": false,
+          "toolsetId": NEA_CREATE_TOOLSET_ID,
+          "appId": appId,
+          "sharingKey": emptyVariationSharingKey
+        },
+      });
+
+      embedMotive.ready().then(()=>{
+        embedMotive.getJSON().then(function (metadata) {
+          console.log('typeof metadata', typeof metadata);
+          console.log('metadata', JSON.stringify(metadata));
+          const measure0 = metadata?.['score-partwise']?.part?.[0]?.measure?.[0];
+          console.log('measure0', measure0);
+          console.log(measure0?.note);
+        }).catch(function (error) {
+          // Unable to get the metadata
+          console.error('idk')
+        });
+
+        embedMotive.getMusicXML().then(function (metadata) {
+          console.log('musicxml', metadata);
+        })
+      })
+
+      embedVariation.ready().then(() => {
+        embedVariation.getJSON().then(function (metadata) {
+          console.log('typeof metadata', typeof metadata);
+          console.log('metadata', metadata);
+          const measure0 = metadata?.['score-partwise']?.part?.[0]?.measure?.[0];
+          console.log('measure0', measure0);
+          console.log(measure0?.note);
+        }).catch(function (error) {
+          // Unable to get the metadata
+          console.error('idk')
+        });
+      })
+      
+      // embedVariation.ready().then(()=> {
+      //   return embedVariation.loadJSON(
+      //     { "score-partwise": { "$version": "3.1", "part-list": { "score-part": [{ "part-name": "Piano", "voiceMapping": { "0": [0] }, "staffMapping": [{ "mainVoiceIdx": 0, "voices": [0], "staffUuid": "b0488968-8d76-cf6a-5241-8fef322f953b" }], "voiceIdxToUuidMapping": { "0": "739c33b9-96b5-8550-ed33-6e8ac0d37883" }, "voiceUuidToIdxMapping": { "739c33b9-96b5-8550-ed33-6e8ac0d37883": 0 }, "part-abbreviation": "Pno.", "score-instrument": { "instrument-name": "Piano", "$id": "P1-I1" }, "midi-instrument": { "midi-program": 1, "volume": "100", "$id": "P1-I1", "midi-channel": "1" }, "$id": "P1", "uuid": "de8e821c-db51-9d75-a7be-248a83d3345c" }] }, "measure-list": { "score-measure": [{ "uuid": "ba7a1333-f721-3a7a-9745-e052db9783d2" }] }, "part": [{ "measure": [{ "note": [{ "staff": "1", "voice": "1", "duration": "2", "pitch": { "octave": "4", "step": "E", "alter": "-1" }, "$adagio-location": { "timePos": 0 }, "type": "quarter" }, { "staff": "1", "voice": "1", "duration": "1", "pitch": { "octave": "4", "step": "F" }, "$adagio-location": { "timePos": 2 }, "beam": { "$number": "1", "content": "begin" }, "type": "eighth" }, { "staff": "1", "voice": "1", "duration": "1", "pitch": { "octave": "4", "step": "G" }, "$adagio-location": { "timePos": 3 }, "beam": { "$number": "1", "content": "end" }, "type": "eighth" }, { "staff": "1", "voice": "1", "duration": "2", "pitch": { "octave": "5", "step": "C" }, "$adagio-location": { "timePos": 4 }, "type": "quarter" }, { "staff": "1", "voice": "1", "duration": "2", "pitch": { "octave": "4", "step": "B", "alter": "-1" }, "$adagio-location": { "timePos": 6 }, "type": "quarter" }], "harmony": [], "$number": "1", "barline": { "$location": "right", "bar-style": "light-heavy", "$adagio-location": { "dpq": 2, "timePos": 8 }, "noteBefore": 4 }, "attributes": [{ "divisions": "2", "time": { "beats": "4", "beat-type": "4" }, "clef": { "sign": "G", "line": "2" }, "key": { "fifths": "-3" }, "staff-details": { "staff-lines": "5" }, "$adagio-time": { "beats": "4", "beat-type": "4" }, "noteBefore": -1, "$adagio-location": { "timePos": 0, "dpq": 1 } }], "sound": [{ "$adagio-swing": { "swing": false }, "noteBefore": -1, "$adagio-location": { "timePos": 0, "dpq": 2 } }, { "$tempo": "80", "noteBefore": -1, "$adagio-location": { "timePos": 0, "dpq": 2 } }], "direction": [{ "$placement": "above", "staff": "1", "$adagio-location": { "timePos": 0 }, "direction-type": { "metronome": { "per-minute": "80", "beat-unit": "quarter" } }, "noteBefore": -1, "$adagio-isFirst": true }], "$adagio-beatsList": [1, 1, 1, 1] }], "$id": "P1", "uuid": "de8e821c-db51-9d75-a7be-248a83d3345c" }] } }
+      //   )
+      // }).then(()=>{
+      //   console.log('variation loaded')
+      // })
+
+      // given a flatIOJSON object, create a new flatIOJSON object with 1 part with 1 measure, with rests in the durations of the notes in the given object's first part's first measure 
+      function createRestsInDurations(notes) {
+
+      }
+      
+
+    // You can now use the `embed` instance.
+    // Check out the docs at https://flat.io/developers/docs/embed/javascript.html
+    // var embed = new Flat.Embed(container, {
+    //   "width": "100%",
+    //   "height": "450",
+    //   "score": "",
+    //   "embedParams": {
+    //     "appId": "60a51c906bcde01fc75a3ad0",
+    //     "sharingKey": "13aff2a9b211e04c77b0621f4361f2f5da02291d6108a8f5523a279e2a36aaecc6130d51835bd95305808977f6a53467f19659d6062fa599e525a071ea27e767"
+    //   },
+    // });
+
+  </script>
+
+</body>
+</html>
