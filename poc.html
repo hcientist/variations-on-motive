@@ -23,18 +23,25 @@
     const emptyVariationScoreId = '647e0783d82978cff39e85d3';
     const emptyVariationSharingKey = '13aff2a9b211e04c77b0621f4361f2f5da02291d6108a8f5523a279e2a36aaecc6130d51835bd95305808977f6a53467f19659d6062fa599e525a071ea27e767';
 
+const tonicEb = {
+    scoreId: '64c0993a9638a82f130dc549',
+    sharingKey: 'bd6ef69e50c7822c1f2fc5b262c553b048cf1f60add3ee9cdb1e85536b8f0d18de20b69fe6089b40e4910ba68d762c4218f00410d5d07368f021ae7298fb99c7'
+  }
+
     let motiveContainer = document.getElementById("embed-motive-container");
     let variationContainer = document.getElementById("embed-variation-container");
 
     window.embedMotive = new Flat.Embed(motiveContainer, {
       "width": "100%",
       "height": "450",
-      "score": motiveScoreId,
+      // "score": motiveScoreId,
+      "score": tonicEb.scoreId,
       "embedParams": {
         "branding": false,
         "controlsPlay": false,
         "appId": appId,
-        "sharingKey": motiveSharingKey
+        "sharingKey": tonicEb.sharingKey
+        // "sharingKey": motiveSharingKey
       },
     });
 

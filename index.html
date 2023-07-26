@@ -58,11 +58,11 @@
             <h5>Chord Scale Buckets</h5>
             <p>These are the chord scale buckets to which Bazual will be asked to limit themself</p>
             <h6>Tonic</h6>
-            <div id="tonic"></div>
+            <div id="tonic-bb"></div>
             <h6>Subdominant</h6>
-            <div id="subdominant"></div>
+            <div id="subdominant-bb"></div>
             <h6>Dominant</h6>
-            <div id="dominant"></div>
+            <div id="dominant-bb"></div>
           </li>
         </ol>
       </li>
@@ -242,6 +242,35 @@
             },
           });
     
+
+          const drBbContainer = document.getElementById("deep-river-bb");
+            const drBbEmbed = new Flat.Embed(drBbContainer, {
+              "width": "100%",
+              "height": "300",
+              "score": deepRiverBb.scoreId,
+              "embedParams": {
+                "branding": false,
+                "controlsPlay": false,
+                "appId": appId,
+                "sharingKey": deepRiverBb.sharingKey
+              },
+            });
+
+
+            const drBbCreateContainer = document.getElementById("deep-river-bb-create");
+            const drBbCreateEmbed = new Flat.Embed(drBbCreateContainer, {
+              "width": "100%",
+              "height": "400",
+              "score": deepRiverBb.scoreId,
+              "embedParams": {
+                "mode": "edit",
+                "toolsetId": NEA_CREATE_TOOLSET_ID,
+                "branding": false,
+                "controlsPlay": false,
+                "appId": appId,
+                "sharingKey": deepRiverBb.sharingKey
+              },
+            });
 
   </script>
 </body>
