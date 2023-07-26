@@ -48,23 +48,23 @@ const tonicEb = {
     let embedVariation = new Flat.Embed(variationContainer, {
         "width": "100%",
         "height": "450",
-        "score": emptyVariationScoreId,
+        "score": motiveScoreId,
         "embedParams": {
           "mode": "edit",
           "branding": false,
           "controlsPlay": false,
           "toolsetId": NEA_CREATE_TOOLSET_ID,
           "appId": appId,
-          "sharingKey": emptyVariationSharingKey
+          "sharingKey": motiveSharingKey
         },
       });
 
       embedMotive.ready().then(()=>{
         embedMotive.getJSON().then(function (metadata) {
-          console.log('typeof metadata', typeof metadata);
-          console.log('metadata', JSON.stringify(metadata));
-          const measure0 = metadata?.['score-partwise']?.part?.[0]?.measure?.[0];
-          console.log('measure0', measure0);
+          // console.log('typeof metadata', typeof metadata);
+          // console.log('metadata', JSON.stringify(metadata));
+          // const measure0 = metadata?.['score-partwise']?.part?.[0]?.measure?.[0];
+          // console.log('measure0', measure0);
           console.log(measure0?.note);
         }).catch(function (error) {
           // Unable to get the metadata
@@ -72,21 +72,30 @@ const tonicEb = {
         });
 
         embedMotive.getMusicXML().then(function (metadata) {
-          console.log('musicxml', metadata);
+          // console.log('musicxml', metadata);
         })
       })
 
       embedVariation.ready().then(() => {
-        embedVariation.getJSON().then(function (metadata) {
-          console.log('typeof metadata', typeof metadata);
-          console.log('metadata', metadata);
-          const measure0 = metadata?.['score-partwise']?.part?.[0]?.measure?.[0];
-          console.log('measure0', measure0);
-          console.log(measure0?.note);
-        }).catch(function (error) {
-          // Unable to get the metadata
-          console.error('idk')
-        });
+        console.log('variation ready')
+        fetch ('tonic-eb-as-minimized.json')
+          .then(response => response.json())
+          .then((data) =>{
+            console.log(data);
+            return embedVariation.loadJSON(data);
+          })
+          .then(()=>console.log('did all that'))
+          .catch((error)=>console.error('error with fetched json', error));
+        // embedVariation.getJSON().then(function (metadata) {
+        //   console.log('typeof metadata', typeof metadata);
+        //   console.log('metadata', metadata);
+        //   const measure0 = metadata?.['score-partwise']?.part?.[0]?.measure?.[0];
+        //   console.log('measure0', measure0);
+        //   console.log(measure0?.note);
+        // }).catch(function (error) {
+        //   // Unable to get the metadata
+        //   console.error('idk')
+        // });
       })
       
       // embedVariation.ready().then(()=> {
