@@ -82,7 +82,7 @@ const diatonicIntervals = {
 // simpler is flute
 // more complex is trumpet
 // french horn is more difficult
-tonic_bucket_interals = {
+tonic_bucket_intervals = {
         {'name':'1','offset': 0},   // Unison
         {'name':'2','offset': 2},   // Major 2nd
         {'name':'3','offset': 4},   // Major 3rd
