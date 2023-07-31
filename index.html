@@ -194,6 +194,13 @@
       },
     });
 
+    drEbEmbed.ready()
+      .then(() => drEbEmbed.getJSON())
+      // .then(r=>r.json())
+      .then((data) => {
+        console.log('reference score:', data)
+      })
+
 
     const drEbCreateContainer = document.getElementById("deep-river-piccolo-create");
     const drEbCreateEmbed = new Flat.Embed(drEbCreateContainer, {
@@ -211,11 +218,43 @@
     });
 
     const pitchesToRests = (pieceScoreJSON) => {
+      const getMeasureTimeSignature = (measure) => {
+        let duration = 8; //default to 8 becasue i reasoned it might be a quarter in some cases
+        let maxRests = 4; //bc 4 is a common denominator for musicians
+        if (measure.attributes) {
+          measure.attributes.forEach((attribute) => {
+            if (attribute.divisions) {
+              duration = attribute.divisions;
+            }
+            if (attribute.time) {
+              if (attribute.time.beats) {
+                maxRests = attribute.time.beats;
+              }
+            }
+          })
+        }
+        return { duration, maxRests };
+      }
       console.log('pieceScoreJSON', pieceScoreJSON)
       const composeScoreJSON = pieceScoreJSON;
+      // nathan! 
+      let duration = 8; //default to 8 becasue i reasoned it might be a quarter in some cases
+      let maxRests = 4; //bc 4 is a common denominator for musicians
+
+
+      let currentTimeSig = {
+        duration,
+        maxRests
+      }
+      // if (composeScoreJSON["score-partwise"].part[0].measure[0]) {
+      //   const firstMeasure = composeScoreJSON["score-partwise"].part[0].measure[0];
+
+
+      // }
       composeScoreJSON["score-partwise"].part[0].measure.forEach((measure) => {
+        currentTimeSig = getMeasureTimeSignature(measure);
         if (measure.direction) {
-          measure.direction.forEach((directionObj)=>{
+          measure.direction.forEach((directionObj) => {
             if (directionObj['direction-type']) {
               directionObj['direction-type'] = undefined;
             }
@@ -224,15 +263,27 @@
             }
           })
 
-        
+
         }
-        
-        measure.note.forEach((note) => {
-          note.rest = {}
-          note.pitch = undefined
-          note.beam = undefined;
-          note.dot = undefined;
-        })
+
+
+        // measure.note = Array(currentTimeSig.maxRests).fill({rest: {}, duration:currentTimeSig.duration})
+        measure.note = Array.from({ length: currentTimeSig.maxRests }, (i, j) => {
+          return {
+            rest: {}, duration: currentTimeSig.duration.toString(), "$adagio-location": {
+              timePos: j * duration
+            }
+          };
+        });
+
+        // measure.note.forEach((note) => {
+        //   note.rest = {}
+        //   note.pitch = undefined
+        //   note.beam = undefined;
+        //   note.dot = undefined;
+        //   note.tie = undefined;
+        //   note.notations = undefined;
+        // })
       })
       console.log('composeScoreJSON', composeScoreJSON)
       return composeScoreJSON
@@ -379,79 +430,79 @@
       },
       {
         sharp: {
-          step: 'C#', alter: '1'
+          repr: 'C#', alter: '1', step: 'C'
         }, flat: {
-          step: 'Db', alter: '-1'
+          repr: 'Db', alter: '-1', step: 'D'
         }
       },
       {
         sharp: {
-          step: 'D', alter: ''
+          repr: 'D', alter: '', step: 'D'
         }, flat: {
-          step: 'D', alter: ''
+          repr: 'D', alter: '', step: 'D'
         }
       },
       {
         sharp: {
-          step: 'D#', alter: '1'
+          repr: 'D#', alter: '1', step: 'D'
         }, flat: {
-          step: 'Eb', alter: '-1'
+          repr: 'Eb', alter: '-1', step: 'E'
         }
       },
       {
         sharp: {
-          step: 'E', alter: ''
+          repr: 'E', alter: '', step: 'E'
         }, flat: {
-          step: 'E', alter: ''
+          repr: 'E', alter: '', step: 'E'
         }
       },
       {
         sharp: {
-          step: 'F', alter: ''
+          repr: 'F', alter: '', step: 'F'
         }, flat: {
-          step: 'F', alter: ''
+          repr: 'F', alter: '', step: 'F'
         }
       },
       {
         sharp: {
-          step: 'F#', alter: '1'
+          repr: 'F#', alter: '1', step: 'F'
         }, flat: {
-          step: 'Gb', alter: '-1'
+          repr: 'Gb', alter: '-1', step: 'G'
         }
       },
       {
         sharp: {
-          step: 'G', alter: ''
+          repr: 'G', alter: '', step: 'G'
         }, flat: {
-          step: 'G', alter: ''
+          repr: 'G', alter: '', step: 'G'
         }
       },
       {
         sharp: {
-          step: 'G#', alter: '1'
+          repr: 'G#', alter: '1', step: 'G'
         }, flat: {
-          step: 'Ab', alter: '-1'
+          repr: 'Ab', alter: '-1', step: 'A'
         }
       },
       {
         sharp: {
-          step: 'A', alter: ''
+          repr: 'A', alter: '', step: 'A'
         }, flat: {
-          step: 'A', alter: ''
+          repr: 'A', alter: '', step: 'A'
         }
       },
       {
         sharp: {
-          step: 'A#', alter: '1'
+          repr: 'A#', alter: '1', step: 'A'
         }, flat: {
-          step: 'Bb', alter: '-1'
+          repr: 'Bb', alter: '-1', step: 'B'
         }
       },
       {
         sharp: {
-          step: 'B', alter: ''
+          repr: 'B', alter: '', step: 'B'
         }, flat: {
-          step: 'B', alter: ''
+          repr: 'B', alter: '', step: 'B'
         }
       }
     ];
@@ -480,7 +531,7 @@
     function getChordScaleInKey(chordScale, key) {
 
       let alter = 'sharp';
-      if (key.includes('b')) {
+      if (key.includes('b') || key === 'F') {
         alter = 'flat';
       }
 
@@ -516,8 +567,15 @@
 
       const firstPitchIdx = noteToScaleIdx[key];
       const firstPitchObj = chromaticScale[firstPitchIdx];
+      let octave = 4;
       return chordScaleIntervals[chordScale].map((interval) => {
-        return chromaticScale[(firstPitchIdx + interval.offset) % chromaticScale.length][alter];
+        if (Math.floor((firstPitchIdx + interval.offset) / chromaticScale.length) > 0) {
+          octave = 5;
+        }
+
+        const result = chromaticScale[(firstPitchIdx + interval.offset) % chromaticScale.length][alter]
+        result.octave = '' + octave;
+        return result;
       });
     }
 
@@ -533,10 +591,10 @@
         '-7': 'Cb'
       }
       const CIRCLE_OF_FIFTHS = Object.assign({}, nonNegative, negatives);
-      console.log(CIRCLE_OF_FIFTHS);
-      console.log('problem here geting key', pieceScoreJSON, pieceScoreJSON?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.[0]?.key?.fifths)
-      const keySignature = CIRCLE_OF_FIFTHS[pieceScoreJSON["score-partwise"]["part"][0]["measure"][0]["attributes"][0]["key"]["fifths"]];
-      console.log('pieceScoreJSON["score-partwise"]["part"][0]["measure"][0]', pieceScoreJSON["score-partwise"]["part"][0]["measure"][0])
+      // console.log(CIRCLE_OF_FIFTHS);
+      // console.log('problem here geting key', pieceScoreJSON, pieceScoreJSON?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.[0]?.key?.fifths)
+      const keySignature = { repr: CIRCLE_OF_FIFTHS[pieceScoreJSON["score-partwise"]["part"][0]["measure"][0]["attributes"][0]["key"]["fifths"]], keyAsJSON: pieceScoreJSON["score-partwise"]["part"][0]["measure"][0]["attributes"][0]["key"] };
+      // console.log('pieceScoreJSON["score-partwise"]["part"][0]["measure"][0]', pieceScoreJSON["score-partwise"]["part"][0]["measure"][0])
       return keySignature;
     }
 
@@ -548,30 +606,68 @@
       })
       .then((pieceScoreJSON) => {
         console.log('pieceScoreJSONForBuckets', pieceScoreJSON)
-        const keySignature = keyFromScoreJSON(pieceScoreJSON);
+        const keySignature = keyFromScoreJSON(pieceScoreJSON); //this is a cheat code: i check the metadata of THIS STUDENT (already accounting for their instrument and the piece's composition key) as a letter like F
         console.log('keySignature', keySignature)
-        const tonicBucket = getChordScaleInKey('tonic', keySignature);
+        const tonicBucket = getChordScaleInKey('tonic', keySignature.repr);
         console.log('tonicBucket', tonicBucket)
-        // const resultTonic = bbTonicBucketEmbed.ready()
-        //   .then(() => {
-        //     return bbTonicBucketEmbed.loadJSON()
-        //   })
 
-        const subdominantBucket = getChordScaleInKey('subdominant', keySignature);
+        const subdominantBucket = getChordScaleInKey('subdominant', keySignature.repr);
         console.log('subdominantBucket', subdominantBucket)
-        // const resultSubdominant = bbSubdominantBucketEmbed.ready()
-        //   .then(() => {
-        //     return bbSubdominantBucketEmbed.loadJSON()
-        //   })
 
-        const dominantBucket = getChordScaleInKey('dominant', keySignature);
+        const dominantBucket = getChordScaleInKey('dominant', keySignature.repr);
         console.log('dominantBucket', dominantBucket)
-        // const resultDominant = bbDominantBucketEmbed.ready()
-        //   .then(() => {
-        //     return bbDominantBucketEmbed.loadJSON()
-        //   })
 
-        // return Promise.all([resultTonic, resultSubdominant, resultDominant])
+        const embedTransposed = (bucket, embed, template, keySig) => {
+          // change the notes in the score from whatever they are in tonic and eb to what we're given
+          const scorePart = template?.["score-partwise"]?.["part-list"]?.["score-part"]?.[0]
+          scorePart["part-name"] = 'Trumpet';//embed.instrumentName;
+          scorePart["part-abbreviation"] = 'Tpt.';//embed.instrumentAbbreviation;
+          scorePart["score-instrument"]["instrument-name"] = 'Trumpet';//embed.instrumentName;
+          template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.note?.forEach((note, i) => {
+            // console.log('note', note)
+            note.pitch.step = bucket[i].step;
+            note.pitch.octave = bucket[i].octave;
+            if (bucket[i].alter) {
+              note.pitch.alter = bucket[i].alter;
+            } else if (note.pitch.alter) {
+              delete note.pitch.alter;
+            }
+          })
+
+          // change the key signature in the score from whatever it is in tonic and eb to what we're given
+          template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.forEach(element => {
+            if (element.key) {
+              element.key.fifths = keySig.keyAsJSON.fifths;
+            }
+          });
+
+          console.log('Bb instrument in F', template)
+          const resultTransposed = embed.ready()
+            .then(() => {
+              return embed.loadJSON(template)
+            })
+          return resultTransposed;
+        }
+
+
+        fetch('tonic-eb-as-minimized.json') // TODO:  change this to actually grab it from flatio then it can work for each case
+          .then(response => response.json())
+          .then((data) => {
+            console.log(data);
+            return data;
+          })
+          .then(data => {
+            return Promise.all([
+              embedTransposed(tonicBucket, bbTonicBucketEmbed, data, keySignature),
+              embedTransposed(subdominantBucket, bbSubdominantBucketEmbed, data, keySignature),
+              embedTransposed(dominantBucket, bbDominantBucketEmbed, data, keySignature)
+            ])
+
+
+          })
+
+
+
 
       })
       .catch((err) => {
