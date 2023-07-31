@@ -28,8 +28,8 @@
     </p>
     <ol>
       <li>
-        <h3>Deep River (in E♭)</h3>
-        <div id="deep-river-piccolo"></div>
+        <h3>Down by the Riverside (in A♭)</h3>
+        <div id="dbtrs-piccolo"></div>
         <ol>
           <li>
             <h4>Ayesha (on Piccolo)</h4>
@@ -37,42 +37,43 @@
             <h5>Score for Create</h5>
             <p>To compose for any of the Create conditions (for this piece), Ayesha will be given this kind of score.
             </p>
-            <div id="deep-river-piccolo-create"></div>
+            <div id="dbtrs-piccolo-create"></div>
             <h5>Chord Scale Buckets</h5>
             <p>Ayseha's instrument is considered Concert Pitch, but within MusicCPR, we further denote that it's
               <code>Concert Pitch TC 8va</code>, which means an octave higher than other <code>Concert Pitch TC</code>
               instruments (e.g. Oboe, Percussion, Piano). Below are the chord scale buckets to which Ayesha will be
               asked to limit herself. The pitches here depend on (1) the fact that her instrument is concert pitch (not
               transposed from concert pitch to another), (2) the fact that the piece is composed in (for?)
-              <code>E♭</code>.
+              <code>A♭</code>.
             </p>
             <h6>Tonic</h6>
-            <div id="tonic"></div>
+            <div id="tonic-dbtrs"></div>
             <h6>Subdominant</h6>
-            <div id="subdominant"></div>
+            <div id="subdominant-dbtrs"></div>
             <h6>Dominant</h6>
-            <div id="dominant"></div>
+            <div id="dominant-dbtrs"></div>
           </li>
           <li>
             <h4>Bazual (on Trumpet)</h4>
-            <p>To perform the melody they would use this B♭ version of Deep River.</p>
-            <div id="deep-river-bb"></div>
+            <p>To perform the melody they would use this B♭ version of Down by the Riverside.</p>
+            <div id="dbtrs-bb"></div>
             <h5>Score for Create</h5>
             <p>To compose for any of the Create conditions (for this piece), Bazual will be given this kind of score.
+              (bc their instrument is considered a Bb instrument, we reference the "conference pitch transposition
+              chart" and see that for a piece whose concert pitch key is Ab, they will be given a score in Bb)
             </p>
-            <div id="deep-river-bb-create"></div>
+            <div id="dbtrs-bb-create"></div>
             <h5>Chord Scale Buckets</h5>
             <p>These are the chord scale buckets to which Bazual will be asked to limit themself</p>
             <h6>Tonic</h6>
-            <div id="tonic-bb"></div>
+            <div id="tonic-dbtrs-bb"></div>
             <h6>Subdominant</h6>
-            <div id="subdominant-bb"></div>
+            <div id="subdominant-dbtrs-bb"></div>
             <h6>Dominant</h6>
-            <div id="dominant-bb"></div>
+            <div id="dominant-dbtrs-bb"></div>
           </li>
         </ol>
       </li>
-
     </ol>
   </main>
   <section>
@@ -147,15 +148,15 @@
   <script>
     const appId = '60a51c906bcde01fc75a3ad0';
     const NEA_CREATE_TOOLSET_ID = '64be80de738efff96cc27edd';
-    const deepRiverEb = { //NOTE: right now this is a placeholder from the "original" (unsimplified version)
-      scoreId: '62ec124b77e86e00128f5ee1',
-      sharingKey: 'bb8fed0fd6d20b67fd8e2cc93f6d809122eac97377d7cdacf251579974347cbc990bc4516be5245b53cec82300cf261cf46af892be9b31ac0510176ab51cedac'
-    }
+    // const deepRiverEb = { //NOTE: right now this is a placeholder from the "original" (unsimplified version)
+    //   scoreId: '62ec124b77e86e00128f5ee1',
+    //   sharingKey: 'bb8fed0fd6d20b67fd8e2cc93f6d809122eac97377d7cdacf251579974347cbc990bc4516be5245b53cec82300cf261cf46af892be9b31ac0510176ab51cedac'
+    // }
 
-    const deepRiverBb = {
-      scoreId: '62ec124a91d8e600128ceb0b',
-      sharingKey: '21f10c88735a17851972c78df5490eea1548045045cf805612b700a2ab2e61ad5468e260b0ccf552f1588a0b4f111193724eb5b60df42c432b75acfe47c02e24'
-    }
+    // const deepRiverBb = {
+    //   scoreId: '62ec124a91d8e600128ceb0b',
+    //   sharingKey: '21f10c88735a17851972c78df5490eea1548045045cf805612b700a2ab2e61ad5468e260b0ccf552f1588a0b4f111193724eb5b60df42c432b75acfe47c02e24'
+    // }
 
     const chordScaleBucketsInEb = {
       tonic: {
@@ -362,12 +363,12 @@
       return keySignature;
     }
 
-    const embedTransposed = (bucket, embed, template, keySig) => {
+    const embedTransposed = (bucket, embed, template, keySig, instrName) => {
       // change the notes in the score from whatever they are in tonic and eb to what we're given
       const scorePart = template?.["score-partwise"]?.["part-list"]?.["score-part"]?.[0]
-      scorePart["part-name"] = 'Trumpet';//embed.instrumentName;
-      scorePart["part-abbreviation"] = 'Tpt.';//embed.instrumentAbbreviation;
-      scorePart["score-instrument"]["instrument-name"] = 'Trumpet';//embed.instrumentName;
+      scorePart["part-name"] = instrName;//embed.instrumentName;
+      scorePart["part-abbreviation"] = instrName;//embed.instrumentAbbreviation;
+      scorePart["score-instrument"]["instrument-name"] = instrName;//embed.instrumentName;
       template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.note?.forEach((note, i) => {
         note.pitch.step = bucket[i].step;
         note.pitch.octave = bucket[i].octave;
@@ -395,7 +396,7 @@
 
 
     //once the student's reference score is loaded (drBbEmbed), check its key signature and then get the corresponding chord scale buckets?
-    const refToChordScaleBuckets = (refEmbed, tonicEmbed, subdominantEmbed, dominantEmbed) => {
+    const refToChordScaleBuckets = (refEmbed, tonicEmbed, subdominantEmbed, dominantEmbed, instrName) => {
       return refEmbed.ready()
         .then(() => {
           return refEmbed.getJSON()
@@ -416,11 +417,18 @@
               return data;
             })
             .then(data => {
-              return embedTransposed(tonicBucket, tonicEmbed, data, keySignature)
+              return embedTransposed(tonicBucket, tonicEmbed, data, keySignature, instrName)
                 .then(() => {
-                  return embedTransposed(subdominantBucket, subdominantEmbed, data, keySignature)
-                }).then(() => {
-                  return embedTransposed(dominantBucket, dominantEmbed, data, keySignature)
+                  return new Promise((res) => setTimeout(() => res(true), 1000));
+                })
+                .then(() => {
+                  return embedTransposed(subdominantBucket, subdominantEmbed, data, keySignature, instrName)
+                })
+                .then(() => {
+                  return new Promise((res) => setTimeout(() => res(true), 1000));
+                })
+                .then(() => {
+                  return embedTransposed(dominantBucket, dominantEmbed, data, keySignature, instrName)
                 })
             })
         })
@@ -501,293 +509,57 @@
       return composeScoreJSON
     };
 
-    const drEbContainer = document.getElementById("deep-river-piccolo");
-    const drEbEmbed = new Flat.Embed(drEbContainer, {
-      "width": "100%",
-      "height": "300",
-      "score": deepRiverEb.scoreId,
-      "embedParams": {
-        "branding": false,
-        "controlsPlay": false,
-        "appId": appId,
-        "sharingKey": deepRiverEb.sharingKey
-      },
-    });
-
-    drEbEmbed.ready()
-      .then(() => drEbEmbed.getJSON())
-      // .then(r=>r.json())
-      .then((data) => {
-        console.log('reference score:', data)
-      })
-
-
-    const drEbCreateContainer = document.getElementById("deep-river-piccolo-create");
-    const drEbCreateEmbed = new Flat.Embed(drEbCreateContainer, {
-      "width": "100%",
-      "height": "400",
-      "score": deepRiverEb.scoreId,
-      "embedParams": {
-        "mode": "edit",
-        "toolsetId": NEA_CREATE_TOOLSET_ID,
-        "branding": false,
-        "controlsPlay": false,
-        "appId": appId,
-        "sharingKey": deepRiverEb.sharingKey
-      },
-    });
-
-
-    drEbCreateEmbed.ready().then(() => {
-      // should just replace all pitches with rests? is that the right number of measures already?
-      return drEbCreateEmbed.getJSON();
-    })
-      .then(pitchesToRests)
-      .then((composeScoreJSON) => {
-        return drEbCreateEmbed.loadJSON(composeScoreJSON)
-      })
-      .catch((err) => {
-        console.error('err in preparing drEbCreateEmbed', err)
-      })
-
-    const ebTonicBucketContainer = document.getElementById("tonic");
-    const ebTonicBucketEmbed = new Flat.Embed(ebTonicBucketContainer, {
-      "width": "100%",
-      "height": "300",
-      "score": chordScaleBucketsInEb.tonic.scoreId,
-      "embedParams": {
-        "branding": false,
-        "controlsPlay": false,
-        "appId": appId,
-        "sharingKey": chordScaleBucketsInEb.tonic.sharingKey
-      },
-    });
-    const ebSubdominantBucketContainer = document.getElementById("subdominant");
-    const ebSubdominantBucketEmbed = new Flat.Embed(ebSubdominantBucketContainer, {
-      "width": "100%",
-      "height": "300",
-      "score": chordScaleBucketsInEb.subdominant.scoreId,
-      "embedParams": {
-        "branding": false,
-        "controlsPlay": false,
-        "appId": appId,
-        "sharingKey": chordScaleBucketsInEb.subdominant.sharingKey
-      },
-    });
-
-    const ebDominantBucketContainer = document.getElementById("dominant");
-    const ebDominantBucketEmbed = new Flat.Embed(ebDominantBucketContainer, {
-      "width": "100%",
-      "height": "300",
-      "score": chordScaleBucketsInEb.dominant.scoreId,
-      "embedParams": {
-        "branding": false,
-        "controlsPlay": false,
-        "appId": appId,
-        "sharingKey": chordScaleBucketsInEb.dominant.sharingKey
-      },
-    });
-
-
-    const drBbContainer = document.getElementById("deep-river-bb");
-    const drBbEmbed = new Flat.Embed(drBbContainer, {
-      "width": "100%",
-      "height": "300",
-      "score": deepRiverBb.scoreId,
-      "embedParams": {
-        "branding": false,
-        "controlsPlay": false,
-        "appId": appId,
-        "sharingKey": deepRiverBb.sharingKey
-      },
-    });
-
-
-    const drBbCreateContainer = document.getElementById("deep-river-bb-create");
-    const drBbCreateEmbed = new Flat.Embed(drBbCreateContainer, {
-      "width": "100%",
-      "height": "400",
-      "score": deepRiverBb.scoreId,
-      "embedParams": {
-        "mode": "edit",
-        "toolsetId": NEA_CREATE_TOOLSET_ID,
-        "branding": false,
-        "controlsPlay": false,
-        "appId": appId,
-        "sharingKey": deepRiverBb.sharingKey
-      },
-    });
-
-    const bbTonicBucketContainer = document.getElementById("tonic-bb");
-    const bbTonicBucketEmbed = new Flat.Embed(bbTonicBucketContainer, {
-      "width": "100%",
-      "height": "300",
-      "score": chordScaleBucketsInEb.tonic.scoreId,
-      "embedParams": {
-        "branding": false,
-        "controlsPlay": false,
-        "appId": appId,
-        "sharingKey": chordScaleBucketsInEb.tonic.sharingKey
-      },
-    });
-
-    const bbSubdominantBucketContainer = document.getElementById("subdominant-bb");
-    const bbSubdominantBucketEmbed = new Flat.Embed(bbSubdominantBucketContainer, {
-      "width": "100%",
-      "height": "300",
-      "score": chordScaleBucketsInEb.subdominant.scoreId,
-      "embedParams": {
-        "branding": false,
-        "controlsPlay": false,
-        "appId": appId,
-        "sharingKey": chordScaleBucketsInEb.subdominant.sharingKey
-      },
-    });
-
-    const bbDominantBucketContainer = document.getElementById("dominant-bb");
-    const bbDominantBucketEmbed = new Flat.Embed(bbDominantBucketContainer, {
-      "width": "100%",
-      "height": "300",
-      "score": chordScaleBucketsInEb.dominant.scoreId,
-      "embedParams": {
-        "branding": false,
-        "controlsPlay": false,
-        "appId": appId,
-        "sharingKey": chordScaleBucketsInEb.dominant.sharingKey
-      },
-    });
-
-    drBbCreateEmbed.ready().then(() => {
-      // should just replace all pitches with rests? is that the right number of measures already?
-      return drBbCreateEmbed.getJSON();
-    })
-      .then(pitchesToRests)
-      .then((composeScoreJSON) => {
-        return drBbCreateEmbed.loadJSON(composeScoreJSON)
-      })
-      .catch((err) => {
-        console.error('err in preparing drBbCreateEmbed', err)
-      })
-
-    refToChordScaleBuckets(drBbEmbed, bbTonicBucketEmbed, bbSubdominantBucketEmbed, bbDominantBucketEmbed)
-    // drBbEmbed.ready()
-    //   .then(() => {
-    //     return drBbEmbed.getJSON()
-    //   })
-    //   .then((pieceScoreJSON) => {
-    //     const keySignature = keyFromScoreJSON(pieceScoreJSON); //this is a cheat code: i check the metadata of THIS STUDENT (already accounting for their instrument and the piece's composition key) as a letter like F
-    //     const tonicBucket = getChordScaleInKey('tonic', keySignature.repr);
-
-    //     const subdominantBucket = getChordScaleInKey('subdominant', keySignature.repr);
-
-    //     const dominantBucket = getChordScaleInKey('dominant', keySignature.repr);
-
-
-    //     return fetch('tonic-eb-as-minimized.json') // TODO:  change this to actually grab it from flatio then it can work for each case
-    //       .then(response => response.json())
-    //       .then((data) => {
-    //         console.log(data);
-    //         return data;
-    //       })
-    //       .then(data => {
-    //         return embedTransposed(tonicBucket, bbTonicBucketEmbed, data, keySignature)
-    //           .then(() => {
-    //             return embedTransposed(subdominantBucket, bbSubdominantBucketEmbed, data, keySignature)
-    //           })
-    //           .then(() => {
-    //             embedTransposed(dominantBucket, bbDominantBucketEmbed, data, keySignature)
-    //           })
-    //       })
-    //   })
-    //   .catch((err) => {
-    //     console.error('err in preparing drBbEmbed', err)
-    //   })
-
-    // const dbtrsAbContainer = document.getElementById("dbtrs-piccolo");
-    // const dbtrsAbEmbed = new Flat.Embed(dbtrsAbContainer, {
+    // const drEbContainer = document.getElementById("deep-river-piccolo");
+    // const drEbEmbed = new Flat.Embed(drEbContainer, {
     //   "width": "100%",
     //   "height": "300",
-    //   "score": downByTheRiversideConcert.scoreId,
+    //   "score": deepRiverEb.scoreId,
     //   "embedParams": {
     //     "branding": false,
     //     "controlsPlay": false,
     //     "appId": appId,
-    //     "sharingKey": downByTheRiversideConcert.sharingKey
+    //     "sharingKey": deepRiverEb.sharingKey
     //   },
     // });
 
+    // drEbEmbed.ready()
+    //   .then(() => drEbEmbed.getJSON())
+    //   // .then(r=>r.json())
+    //   .then((data) => {
+    //     console.log('reference score:', data)
+    //   })
 
 
-    // const dbtrsAbCreateContainer = document.getElementById("dbtrs-piccolo-create");
-    // const dbtrsAbCreateEmbed = new Flat.Embed(dbtrsAbCreateContainer, {
+    // const drEbCreateContainer = document.getElementById("deep-river-piccolo-create");
+    // const drEbCreateEmbed = new Flat.Embed(drEbCreateContainer, {
     //   "width": "100%",
-    //   "height": "300",
-    //   "score": downByTheRiversideConcert.scoreId,
+    //   "height": "400",
+    //   "score": deepRiverEb.scoreId,
     //   "embedParams": {
     //     "mode": "edit",
     //     "toolsetId": NEA_CREATE_TOOLSET_ID,
     //     "branding": false,
     //     "controlsPlay": false,
     //     "appId": appId,
-    //     "sharingKey": downByTheRiversideConcert.sharingKey
+    //     "sharingKey": deepRiverEb.sharingKey
     //   },
     // });
 
-    // dbtrsAbCreateEmbed.ready().then(() => {
+
+    // drEbCreateEmbed.ready().then(() => {
     //   // should just replace all pitches with rests? is that the right number of measures already?
-    //   return dbtrsAbCreateEmbed.getJSON();
+    //   return drEbCreateEmbed.getJSON();
     // })
     //   .then(pitchesToRests)
     //   .then((composeScoreJSON) => {
-    //     return dbtrsAbCreateEmbed.loadJSON(composeScoreJSON)
+    //     return drEbCreateEmbed.loadJSON(composeScoreJSON)
     //   })
     //   .catch((err) => {
-    //     console.error('err in preparing dbtrsAbCreateEmbed', err)
+    //     console.error('err in preparing drEbCreateEmbed', err)
     //   })
 
-
-    // const dbtrsBbContainer = document.getElementById("dbtrs-bb");
-    // const dbtrsBbEmbed = new Flat.Embed(dbtrsBbContainer, {
-    //   "width": "100%",
-    //   "height": "300",
-    //   "score": downByTheRiversideBb.scoreId,
-    //   "embedParams": {
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": downByTheRiversideBb.sharingKey
-    //   },
-    // });
-    // const dbtrsBbCreateContainer = document.getElementById("dbtrs-bb-create");
-    // const dbtrsBbCreateEmbed = new Flat.Embed(dbtrsBbCreateContainer, {
-    //   "width": "100%",
-    //   "height": "300",
-    //   "score": downByTheRiversideBb.scoreId,
-    //   "embedParams": {
-    //     "mode": "edit",
-    //     "toolsetId": NEA_CREATE_TOOLSET_ID,
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": downByTheRiversideBb.sharingKey
-    //   },
-    // });
-
-    // dbtrsBbCreateEmbed.ready().then(() => {
-    //   // should just replace all pitches with rests? is that the right number of measures already?
-    //   return dbtrsBbCreateEmbed.getJSON();
-    // })
-    //   .then(pitchesToRests)
-    //   .then((composeScoreJSON) => {
-    //     return dbtrsBbCreateEmbed.loadJSON(composeScoreJSON)
-    //   })
-    //   .catch((err) => {
-    //     console.error('err in preparing dbtrsBbCreateEmbed', err)
-    //   })
-
-
-    // const abTonicBucketContainer = document.getElementById("tonic-dbtrs");
-    // const abTonicBucketEmbed = new Flat.Embed(abTonicBucketContainer, {
+    // const ebTonicBucketContainer = document.getElementById("tonic");
+    // const ebTonicBucketEmbed = new Flat.Embed(ebTonicBucketContainer, {
     //   "width": "100%",
     //   "height": "300",
     //   "score": chordScaleBucketsInEb.tonic.scoreId,
@@ -798,11 +570,8 @@
     //     "sharingKey": chordScaleBucketsInEb.tonic.sharingKey
     //   },
     // });
-
-
-
-    // const abSubdominantBucketContainer = document.getElementById("subdominant-dbtrs");
-    // const abSubdominantBucketEmbed = new Flat.Embed(abSubdominantBucketContainer, {
+    // const ebSubdominantBucketContainer = document.getElementById("subdominant");
+    // const ebSubdominantBucketEmbed = new Flat.Embed(ebSubdominantBucketContainer, {
     //   "width": "100%",
     //   "height": "300",
     //   "score": chordScaleBucketsInEb.subdominant.scoreId,
@@ -814,8 +583,8 @@
     //   },
     // });
 
-    // const abDominantBucketContainer = document.getElementById("dominant-dbtrs");
-    // const abDominantBucketEmbed = new Flat.Embed(abDominantBucketContainer, {
+    // const ebDominantBucketContainer = document.getElementById("dominant");
+    // const ebDominantBucketEmbed = new Flat.Embed(ebDominantBucketContainer, {
     //   "width": "100%",
     //   "height": "300",
     //   "score": chordScaleBucketsInEb.dominant.scoreId,
@@ -827,11 +596,38 @@
     //   },
     // });
 
-    // refToChordScaleBuckets(dbtrsAbEmbed, abTonicBucketEmbed, abSubdominantBucketEmbed, abDominantBucketEmbed)
+
+    // const drBbContainer = document.getElementById("deep-river-bb");
+    // const drBbEmbed = new Flat.Embed(drBbContainer, {
+    //   "width": "100%",
+    //   "height": "300",
+    //   "score": deepRiverBb.scoreId,
+    //   "embedParams": {
+    //     "branding": false,
+    //     "controlsPlay": false,
+    //     "appId": appId,
+    //     "sharingKey": deepRiverBb.sharingKey
+    //   },
+    // });
 
 
-    // const bbTonicBucketContainerDBTRS = document.getElementById("tonic-dbtrs-bb");
-    // const bbTonicBucketEmbedDBTRS = new Flat.Embed(bbTonicBucketContainer, {
+    // const drBbCreateContainer = document.getElementById("deep-river-bb-create");
+    // const drBbCreateEmbed = new Flat.Embed(drBbCreateContainer, {
+    //   "width": "100%",
+    //   "height": "400",
+    //   "score": deepRiverBb.scoreId,
+    //   "embedParams": {
+    //     "mode": "edit",
+    //     "toolsetId": NEA_CREATE_TOOLSET_ID,
+    //     "branding": false,
+    //     "controlsPlay": false,
+    //     "appId": appId,
+    //     "sharingKey": deepRiverBb.sharingKey
+    //   },
+    // });
+
+    // const bbTonicBucketContainer = document.getElementById("tonic-bb");
+    // const bbTonicBucketEmbed = new Flat.Embed(bbTonicBucketContainer, {
     //   "width": "100%",
     //   "height": "300",
     //   "score": chordScaleBucketsInEb.tonic.scoreId,
@@ -843,8 +639,8 @@
     //   },
     // });
 
-    // const bbSubdominantBucketContainerDBTRS = document.getElementById("subdominant-dbtrs-bb");
-    // const bbSubdominantBucketEmbedDBTRS = new Flat.Embed(bbSubdominantBucketContainer, {
+    // const bbSubdominantBucketContainer = document.getElementById("subdominant-bb");
+    // const bbSubdominantBucketEmbed = new Flat.Embed(bbSubdominantBucketContainer, {
     //   "width": "100%",
     //   "height": "300",
     //   "score": chordScaleBucketsInEb.subdominant.scoreId,
@@ -856,8 +652,8 @@
     //   },
     // });
 
-    // const bbDominantBucketContainerDBTRS = document.getElementById("dominant-dbtrs-bb");
-    // const bbDominantBucketEmbedDBTRS = new Flat.Embed(bbDominantBucketContainer, {
+    // const bbDominantBucketContainer = document.getElementById("dominant-bb");
+    // const bbDominantBucketEmbed = new Flat.Embed(bbDominantBucketContainer, {
     //   "width": "100%",
     //   "height": "300",
     //   "score": chordScaleBucketsInEb.dominant.scoreId,
@@ -869,7 +665,231 @@
     //   },
     // });
 
-    // refToChordScaleBuckets(dbtrsBbEmbed, bbTonicBucketEmbedDBTRS, bbSubdominantBucketEmbedDBTRS, bbDominantBucketEmbedDBTRS)
+    // drBbCreateEmbed.ready().then(() => {
+    //   // should just replace all pitches with rests? is that the right number of measures already?
+    //   return drBbCreateEmbed.getJSON();
+    // })
+    //   .then(pitchesToRests)
+    //   .then((composeScoreJSON) => {
+    //     return drBbCreateEmbed.loadJSON(composeScoreJSON)
+    //   })
+    //   .catch((err) => {
+    //     console.error('err in preparing drBbCreateEmbed', err)
+    //   })
+
+    // refToChordScaleBuckets(drBbEmbed, bbTonicBucketEmbed, bbSubdominantBucketEmbed, bbDominantBucketEmbed)
+    // // drBbEmbed.ready()
+    // //   .then(() => {
+    // //     return drBbEmbed.getJSON()
+    // //   })
+    // //   .then((pieceScoreJSON) => {
+    // //     const keySignature = keyFromScoreJSON(pieceScoreJSON); //this is a cheat code: i check the metadata of THIS STUDENT (already accounting for their instrument and the piece's composition key) as a letter like F
+    // //     const tonicBucket = getChordScaleInKey('tonic', keySignature.repr);
+
+    // //     const subdominantBucket = getChordScaleInKey('subdominant', keySignature.repr);
+
+    // //     const dominantBucket = getChordScaleInKey('dominant', keySignature.repr);
+
+
+    // //     return fetch('tonic-eb-as-minimized.json') // TODO:  change this to actually grab it from flatio then it can work for each case
+    // //       .then(response => response.json())
+    // //       .then((data) => {
+    // //         console.log(data);
+    // //         return data;
+    // //       })
+    // //       .then(data => {
+    // //         return embedTransposed(tonicBucket, bbTonicBucketEmbed, data, keySignature)
+    // //           .then(() => {
+    // //             return embedTransposed(subdominantBucket, bbSubdominantBucketEmbed, data, keySignature)
+    // //           })
+    // //           .then(() => {
+    // //             embedTransposed(dominantBucket, bbDominantBucketEmbed, data, keySignature)
+    // //           })
+    // //       })
+    // //   })
+    // //   .catch((err) => {
+    // //     console.error('err in preparing drBbEmbed', err)
+    // //   })
+
+    const dbtrsAbContainer = document.getElementById("dbtrs-piccolo");
+    const dbtrsAbEmbed = new Flat.Embed(dbtrsAbContainer, {
+      "width": "100%",
+      "height": "300",
+      "score": downByTheRiversideConcert.scoreId,
+      "embedParams": {
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": downByTheRiversideConcert.sharingKey
+      },
+    });
+
+
+
+    const dbtrsAbCreateContainer = document.getElementById("dbtrs-piccolo-create");
+    const dbtrsAbCreateEmbed = new Flat.Embed(dbtrsAbCreateContainer, {
+      "width": "100%",
+      "height": "300",
+      "score": downByTheRiversideConcert.scoreId,
+      "embedParams": {
+        "mode": "edit",
+        "toolsetId": NEA_CREATE_TOOLSET_ID,
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": downByTheRiversideConcert.sharingKey
+      },
+    });
+
+    //adding this in results in a js error, but seemingly one not caught by the catch??
+    // Uncaught (in promise) TypeError: can't access property "appendChild", this.$refs.pages is null
+    dbtrsAbCreateEmbed.ready()
+      .then(() => {
+        return new Promise((res) => setTimeout(() => res(true), 1000));
+      })
+      .then(() => {
+        // should just replace all pitches with rests? is that the right number of measures already?
+        return dbtrsAbCreateEmbed.getJSON();
+      })
+      .then(pitchesToRests)
+      .then((composeScoreJSON) => {
+        return dbtrsAbCreateEmbed.loadJSON(composeScoreJSON)
+      })
+      .catch((err) => {
+        console.error('err in preparing dbtrsAbCreateEmbed', err)
+      })
+
+
+    const dbtrsBbContainer = document.getElementById("dbtrs-bb");
+    const dbtrsBbEmbed = new Flat.Embed(dbtrsBbContainer, {
+      "width": "100%",
+      "height": "300",
+      "score": downByTheRiversideBb.scoreId,
+      "embedParams": {
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": downByTheRiversideBb.sharingKey
+      },
+    });
+    const dbtrsBbCreateContainer = document.getElementById("dbtrs-bb-create");
+    const dbtrsBbCreateEmbed = new Flat.Embed(dbtrsBbCreateContainer, {
+      "width": "100%",
+      "height": "300",
+      "score": downByTheRiversideBb.scoreId,
+      "embedParams": {
+        "mode": "edit",
+        "toolsetId": NEA_CREATE_TOOLSET_ID,
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": downByTheRiversideBb.sharingKey
+      },
+    });
+
+    //again, //adding this in results in a js error, but seemingly one not caught by the catch??
+    // Uncaught (in promise) TypeError: can't access property "appendChild", this.$refs.pages is null
+    dbtrsBbCreateEmbed.ready()
+      .then(() => {
+        return new Promise((res) => setTimeout(() => res(true), 1000));
+      })
+      .then(() => {
+        // should just replace all pitches with rests? is that the right number of measures already?
+        return dbtrsBbCreateEmbed.getJSON();
+      })
+      .then(pitchesToRests)
+      .then((composeScoreJSON) => {
+        return dbtrsBbCreateEmbed.loadJSON(composeScoreJSON)
+      })
+      .catch((err) => {
+        console.error('err in preparing dbtrsBbCreateEmbed', err)
+      })
+
+
+    const abTonicBucketContainer = document.getElementById("tonic-dbtrs");
+    const abTonicBucketEmbed = new Flat.Embed(abTonicBucketContainer, {
+      "width": "100%",
+      "height": "300",
+      "score": chordScaleBucketsInEb.tonic.scoreId,
+      "embedParams": {
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": chordScaleBucketsInEb.tonic.sharingKey
+      },
+    });
+
+
+
+    const abSubdominantBucketContainer = document.getElementById("subdominant-dbtrs");
+    const abSubdominantBucketEmbed = new Flat.Embed(abSubdominantBucketContainer, {
+      "width": "100%",
+      "height": "300",
+      "score": chordScaleBucketsInEb.subdominant.scoreId,
+      "embedParams": {
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": chordScaleBucketsInEb.subdominant.sharingKey
+      },
+    });
+
+    const abDominantBucketContainer = document.getElementById("dominant-dbtrs");
+    const abDominantBucketEmbed = new Flat.Embed(abDominantBucketContainer, {
+      "width": "100%",
+      "height": "300",
+      "score": chordScaleBucketsInEb.dominant.scoreId,
+      "embedParams": {
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": chordScaleBucketsInEb.dominant.sharingKey
+      },
+    });
+
+    refToChordScaleBuckets(dbtrsAbEmbed, abTonicBucketEmbed, abSubdominantBucketEmbed, abDominantBucketEmbed, 'Piccolo')
+
+
+    const bbTonicBucketContainerDBTRS = document.getElementById("tonic-dbtrs-bb");
+    const bbTonicBucketEmbedDBTRS = new Flat.Embed(bbTonicBucketContainerDBTRS, {
+      "width": "100%",
+      "height": "300",
+      "score": chordScaleBucketsInEb.tonic.scoreId,
+      "embedParams": {
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": chordScaleBucketsInEb.tonic.sharingKey
+      },
+    });
+
+    const bbSubdominantBucketContainerDBTRS = document.getElementById("subdominant-dbtrs-bb");
+    const bbSubdominantBucketEmbedDBTRS = new Flat.Embed(bbSubdominantBucketContainerDBTRS, {
+      "width": "100%",
+      "height": "300",
+      "score": chordScaleBucketsInEb.subdominant.scoreId,
+      "embedParams": {
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": chordScaleBucketsInEb.subdominant.sharingKey
+      },
+    });
+
+    const bbDominantBucketContainerDBTRS = document.getElementById("dominant-dbtrs-bb");
+    const bbDominantBucketEmbedDBTRS = new Flat.Embed(bbDominantBucketContainerDBTRS, {
+      "width": "100%",
+      "height": "300",
+      "score": chordScaleBucketsInEb.dominant.scoreId,
+      "embedParams": {
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "sharingKey": chordScaleBucketsInEb.dominant.sharingKey
+      },
+    });
+
+    refToChordScaleBuckets(dbtrsBbEmbed, bbTonicBucketEmbedDBTRS, bbSubdominantBucketEmbedDBTRS, bbDominantBucketEmbedDBTRS, 'Trumpet')
 
   </script>
 </body>
