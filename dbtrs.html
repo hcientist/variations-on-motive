@@ -47,10 +47,13 @@
               <code>A♭</code>.
             </p>
             <h6>Tonic</h6>
+            <div id="tonic-dbtrs-scale-degrees"></div>
             <div id="tonic-dbtrs"></div>
             <h6>Subdominant</h6>
+            <div id="subdominant-dbtrs-scale-degrees"></div>
             <div id="subdominant-dbtrs"></div>
             <h6>Dominant</h6>
+            <div id="dominant-dbtrs-scale-degrees"></div>
             <div id="dominant-dbtrs"></div>
           </li>
           <li>
@@ -66,10 +69,13 @@
             <h5>Chord Scale Buckets</h5>
             <p>These are the chord scale buckets to which Bazual will be asked to limit themself</p>
             <h6>Tonic</h6>
+            <div id="tonic-dbtrs-bb-scale-degrees"></div>
             <div id="tonic-dbtrs-bb"></div>
             <h6>Subdominant</h6>
+            <div id="subdominant-dbtrs-bb-scale-degrees"></div>
             <div id="subdominant-dbtrs-bb"></div>
             <h6>Dominant</h6>
+            <div id="dominant-dbtrs-bb-scale-degrees"></div>
             <div id="dominant-dbtrs-bb"></div>
           </li>
         </ol>
@@ -145,33 +151,9 @@
     integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
     crossorigin="anonymous"></script>
   <script src="https://prod.flat-cdn.com/embed-js/v1.5.1/embed.min.js"></script>
+  <script src="thick.js"></script>
   <script>
-    const appId = '60a51c906bcde01fc75a3ad0';
-    const NEA_CREATE_TOOLSET_ID = '64be80de738efff96cc27edd';
-    // const deepRiverEb = { //NOTE: right now this is a placeholder from the "original" (unsimplified version)
-    //   scoreId: '62ec124b77e86e00128f5ee1',
-    //   sharingKey: 'bb8fed0fd6d20b67fd8e2cc93f6d809122eac97377d7cdacf251579974347cbc990bc4516be5245b53cec82300cf261cf46af892be9b31ac0510176ab51cedac'
-    // }
 
-    // const deepRiverBb = {
-    //   scoreId: '62ec124a91d8e600128ceb0b',
-    //   sharingKey: '21f10c88735a17851972c78df5490eea1548045045cf805612b700a2ab2e61ad5468e260b0ccf552f1588a0b4f111193724eb5b60df42c432b75acfe47c02e24'
-    // }
-
-    const chordScaleBucketsInEb = {
-      tonic: {
-        scoreId: '64c0993a9638a82f130dc549',
-        sharingKey: 'bd6ef69e50c7822c1f2fc5b262c553b048cf1f60add3ee9cdb1e85536b8f0d18de20b69fe6089b40e4910ba68d762c4218f00410d5d07368f021ae7298fb99c7'
-      },
-      subdominant: {
-        scoreId: '64c099d94d7650a3d9ba7598',
-        sharingKey: '19663d1b0e19b5f9ff11ad28b80c45546693499c94ed5d7c992bdeb9f7c58e968a219144a3aabaa05845947089607d51d25a37fe94a3ca6fcf14e67cff361c3d'
-      },
-      dominant: {
-        scoreId: '64c09a22168dab0ff8733c35',
-        sharingKey: 'adaf25a2ea6be22b81af0658dbff5d0537625d171f9c2fed3406c6ad39a24c3ffaf87cfc662672f5aa11d0d8d9f09989567bde6c8d028586b11873d7596030c0'
-      }
-    }
 
     const downByTheRiversideConcert = {
       scoreId: '62ec10e691d8e600128cd955', //this turns out to be Ab
@@ -183,533 +165,13 @@
       sharingKey: '0e02133ac03e0c10401a5cc48096b8c31e94246a0e1e7847f2336a1a950bf488dd0013d05af7f2c9cf40aca41bf36be17d872a01746c90de4249f39ca36f7b12'
     }
 
-    const chromaticScale = [
-      {
-        sharp: {
-          step: 'C', alter: ''
-        }, flat: {
-          step: 'C', alter: ''
-        }
-      },
-      {
-        sharp: {
-          repr: 'C#', alter: '1', step: 'C'
-        }, flat: {
-          repr: 'Db', alter: '-1', step: 'D'
-        }
-      },
-      {
-        sharp: {
-          repr: 'D', alter: '', step: 'D'
-        }, flat: {
-          repr: 'D', alter: '', step: 'D'
-        }
-      },
-      {
-        sharp: {
-          repr: 'D#', alter: '1', step: 'D'
-        }, flat: {
-          repr: 'Eb', alter: '-1', step: 'E'
-        }
-      },
-      {
-        sharp: {
-          repr: 'E', alter: '', step: 'E'
-        }, flat: {
-          repr: 'E', alter: '', step: 'E'
-        }
-      },
-      {
-        sharp: {
-          repr: 'F', alter: '', step: 'F'
-        }, flat: {
-          repr: 'F', alter: '', step: 'F'
-        }
-      },
-      {
-        sharp: {
-          repr: 'F#', alter: '1', step: 'F'
-        }, flat: {
-          repr: 'Gb', alter: '-1', step: 'G'
-        }
-      },
-      {
-        sharp: {
-          repr: 'G', alter: '', step: 'G'
-        }, flat: {
-          repr: 'G', alter: '', step: 'G'
-        }
-      },
-      {
-        sharp: {
-          repr: 'G#', alter: '1', step: 'G'
-        }, flat: {
-          repr: 'Ab', alter: '-1', step: 'A'
-        }
-      },
-      {
-        sharp: {
-          repr: 'A', alter: '', step: 'A'
-        }, flat: {
-          repr: 'A', alter: '', step: 'A'
-        }
-      },
-      {
-        sharp: {
-          repr: 'A#', alter: '1', step: 'A'
-        }, flat: {
-          repr: 'Bb', alter: '-1', step: 'B'
-        }
-      },
-      {
-        sharp: {
-          repr: 'B', alter: '', step: 'B'
-        }, flat: {
-          repr: 'B', alter: '', step: 'B'
-        }
-      }
-    ];
 
-    const noteToScaleIdx = {
-      'C': 0,
-      'C#': 1,
-      'Db': 1,
-      'D': 2,
-      'D#': 3,
-      'Eb': 3,
-      'E': 4,
-      'F': 5,
-      'F#': 6,
-      'Gb': 6,
-      'G': 7,
-      'G#': 8,
-      'Ab': 8,
-      'A': 9,
-      'A#': 10,
-      'Bb': 10,
-      'B': 11
-    };
-
-
-    function getChordScaleInKey(chordScale, key) {
-
-      let alter = 'sharp';
-      if (key.includes('b') || key === 'F') {
-        alter = 'flat';
-      }
-
-      const tonicBucketIntervals = [
-        { 'name': '1', 'offset': 0 },   // Unison
-        { 'name': '2', 'offset': 2 },   // Major 2nd
-        { 'name': '3', 'offset': 4 },   // Major 3rd
-        { 'name': '5', 'offset': 7 },   // Perfect 5th
-        { 'name': '6', 'offset': 9 }   // Major 6th
-      ]
-
-      const subdominantBucketIntervals = [
-        { 'name': '1', 'offset': 0 },   // Unison
-        { 'name': '2', 'offset': 2 },   // Major 2nd
-        { 'name': '4', 'offset': 5 },   // Perfect 4th
-        { 'name': '5', 'offset': 7 },   // Perfect 5th
-        { 'name': '6', 'offset': 9 }   // Major 6th
-      ]
-
-      const dominantBucketIntervals = [
-        { 'name': '2', 'offset': 2 },   // Major 2nd
-        { 'name': '4', 'offset': 5 },   // Perfect 4th
-        { 'name': '5', 'offset': 7 },   // Perfect 5th
-        { 'name': '6', 'offset': 9 },   // Major 6th
-        { 'name': '7', 'offset': 11 }   // 7th
-      ]
-
-      const chordScaleIntervals = {
-        tonic: tonicBucketIntervals,
-        subdominant: subdominantBucketIntervals,
-        dominant: dominantBucketIntervals
-      }
-
-      const firstPitchIdx = noteToScaleIdx[key];
-      const firstPitchObj = chromaticScale[firstPitchIdx];
-      let octave = 4;
-      const mapped = chordScaleIntervals[chordScale].map((interval) => {
-        if (Math.floor((firstPitchIdx + interval.offset) / chromaticScale.length) > 0) {
-          octave = 5;
-        }
-
-        const result = chromaticScale[(firstPitchIdx + interval.offset) % chromaticScale.length][alter]
-        result.octave = '' + octave;
-        return result;
-      });
-      console.log(`chord scale buckets for ${chordScale} in key ${key}`, mapped);
-      return mapped;
-    }
-
-    const keyFromScoreJSON = (pieceScoreJSON) => {
-      const nonNegative = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#'];
-      const negatives = {
-        '-1': 'F',
-        '-2': 'Bb',
-        '-3': 'Eb',
-        '-4': 'Ab',
-        '-5': 'Db',
-        '-6': 'Gb',
-        '-7': 'Cb'
-      }
-      const CIRCLE_OF_FIFTHS = Object.assign({}, nonNegative, negatives);
-      // console.log(CIRCLE_OF_FIFTHS);
-      // console.log('problem here geting key', pieceScoreJSON, pieceScoreJSON?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.[0]?.key?.fifths)
-      const keySignature = { repr: CIRCLE_OF_FIFTHS[pieceScoreJSON["score-partwise"]["part"][0]["measure"][0]["attributes"][0]["key"]["fifths"]], keyAsJSON: pieceScoreJSON["score-partwise"]["part"][0]["measure"][0]["attributes"][0]["key"] };
-      // console.log('pieceScoreJSON["score-partwise"]["part"][0]["measure"][0]', pieceScoreJSON["score-partwise"]["part"][0]["measure"][0])
-      return keySignature;
-    }
-
-    const embedTransposed = (bucket, embed, template, keySig, instrName) => {
-      // change the notes in the score from whatever they are in tonic and eb to what we're given
-      const scorePart = template?.["score-partwise"]?.["part-list"]?.["score-part"]?.[0]
-      scorePart["part-name"] = instrName;//embed.instrumentName;
-      scorePart["part-abbreviation"] = instrName;//embed.instrumentAbbreviation;
-      scorePart["score-instrument"]["instrument-name"] = instrName;//embed.instrumentName;
-      template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.note?.forEach((note, i) => {
-        note.pitch.step = bucket[i].step;
-        note.pitch.octave = bucket[i].octave;
-        if (bucket[i].alter) {
-          note.pitch.alter = bucket[i].alter;
-        } else if (note.pitch.alter) {
-          delete note.pitch.alter;
-        }
-      })
-
-      // change the key signature in the score from whatever it is in tonic and eb to what we're given
-      template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.forEach(element => {
-        if (element.key) {
-          element.key.fifths = keySig.keyAsJSON.fifths;
-        }
-      });
-
-      const resultTransposed = embed.ready()
-        .then(() => {
-          return embed.loadJSON(template)
-        })
-      return resultTransposed;
-    }
-
-
-
-    //once the student's reference score is loaded (drBbEmbed), check its key signature and then get the corresponding chord scale buckets?
-    const refToChordScaleBuckets = (refEmbed, tonicEmbed, subdominantEmbed, dominantEmbed, instrName) => {
-      return refEmbed.ready()
-        .then(() => {
-          return refEmbed.getJSON()
-        })
-        .then((pieceScoreJSON) => {
-          const keySignature = keyFromScoreJSON(pieceScoreJSON); //this is a cheat code: i check the metadata of THIS STUDENT (already accounting for their instrument and the piece's composition key) as a letter like F
-          const tonicBucket = getChordScaleInKey('tonic', keySignature.repr);
-
-          const subdominantBucket = getChordScaleInKey('subdominant', keySignature.repr);
-
-          const dominantBucket = getChordScaleInKey('dominant', keySignature.repr);
-          console.log('tonicBucket', tonicBucket, 'subdominantBucket', subdominantBucket, 'dominantBucket', dominantBucket)
-
-          return fetch('tonic-eb-as-minimized.json')
-            .then(response => response.json())
-            .then((data) => {
-              console.log(data);
-              return data;
-            })
-            .then(data => {
-              return embedTransposed(tonicBucket, tonicEmbed, data, keySignature, instrName)
-                .then(() => {
-                  return new Promise((res) => setTimeout(() => res(true), 1000));
-                })
-                .then(() => {
-                  return embedTransposed(subdominantBucket, subdominantEmbed, data, keySignature, instrName)
-                })
-                .then(() => {
-                  return new Promise((res) => setTimeout(() => res(true), 1000));
-                })
-                .then(() => {
-                  return embedTransposed(dominantBucket, dominantEmbed, data, keySignature, instrName)
-                })
-            })
-        })
-        .catch((err) => {
-          console.error('err in preparing refEmbed', err)
-        })
-    }
-
-    const pitchesToRests = (pieceScoreJSON) => {
-      const getMeasureTimeSignature = (measure) => {
-        let duration = 8; //default to 8 becasue i reasoned it might be a quarter in some cases
-        let maxRests = 4; //bc 4 is a common denominator for musicians
-        if (measure.attributes) {
-          measure.attributes.forEach((attribute) => {
-            if (attribute.divisions) {
-              duration = attribute.divisions;
-            }
-            if (attribute.time) {
-              if (attribute.time.beats) {
-                maxRests = attribute.time.beats;
-              }
-            }
-          })
-        }
-        return { duration, maxRests };
-      }
-      console.log('pieceScoreJSON', pieceScoreJSON)
-      const composeScoreJSON = pieceScoreJSON;
-      // nathan! 
-      let duration = 8; //default to 8 becasue i reasoned it might be a quarter in some cases
-      let maxRests = 4; //bc 4 is a common denominator for musicians
-
-
-      let currentTimeSig = {
-        duration,
-        maxRests
-      }
-      // if (composeScoreJSON["score-partwise"].part[0].measure[0]) {
-      //   const firstMeasure = composeScoreJSON["score-partwise"].part[0].measure[0];
-
-
-      // }
-      composeScoreJSON["score-partwise"].part[0].measure.forEach((measure) => {
-        currentTimeSig = getMeasureTimeSignature(measure);
-        if (measure.direction) {
-          measure.direction.forEach((directionObj) => {
-            if (directionObj['direction-type']) {
-              directionObj['direction-type'] = undefined;
-            }
-            if (directionObj.sound) {
-              directionObj.sound = undefined;
-            }
-          })
-
-
-        }
-
-
-        // measure.note = Array(currentTimeSig.maxRests).fill({rest: {}, duration:currentTimeSig.duration})
-        measure.note = Array.from({ length: currentTimeSig.maxRests }, (i, j) => {
-          return {
-            rest: {}, duration: currentTimeSig.duration.toString(), "$adagio-location": {
-              timePos: j * duration
-            }
-          };
-        });
-
-        // measure.note.forEach((note) => {
-        //   note.rest = {}
-        //   note.pitch = undefined
-        //   note.beam = undefined;
-        //   note.dot = undefined;
-        //   note.tie = undefined;
-        //   note.notations = undefined;
-        // })
-      })
-      console.log('composeScoreJSON', composeScoreJSON)
-      return composeScoreJSON
-    };
-
-    // const drEbContainer = document.getElementById("deep-river-piccolo");
-    // const drEbEmbed = new Flat.Embed(drEbContainer, {
-    //   "width": "100%",
-    //   "height": "300",
-    //   "score": deepRiverEb.scoreId,
-    //   "embedParams": {
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": deepRiverEb.sharingKey
-    //   },
-    // });
-
-    // drEbEmbed.ready()
-    //   .then(() => drEbEmbed.getJSON())
-    //   // .then(r=>r.json())
-    //   .then((data) => {
-    //     console.log('reference score:', data)
-    //   })
-
-
-    // const drEbCreateContainer = document.getElementById("deep-river-piccolo-create");
-    // const drEbCreateEmbed = new Flat.Embed(drEbCreateContainer, {
-    //   "width": "100%",
-    //   "height": "400",
-    //   "score": deepRiverEb.scoreId,
-    //   "embedParams": {
-    //     "mode": "edit",
-    //     "toolsetId": NEA_CREATE_TOOLSET_ID,
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": deepRiverEb.sharingKey
-    //   },
-    // });
-
-
-    // drEbCreateEmbed.ready().then(() => {
-    //   // should just replace all pitches with rests? is that the right number of measures already?
-    //   return drEbCreateEmbed.getJSON();
-    // })
-    //   .then(pitchesToRests)
-    //   .then((composeScoreJSON) => {
-    //     return drEbCreateEmbed.loadJSON(composeScoreJSON)
-    //   })
-    //   .catch((err) => {
-    //     console.error('err in preparing drEbCreateEmbed', err)
-    //   })
-
-    // const ebTonicBucketContainer = document.getElementById("tonic");
-    // const ebTonicBucketEmbed = new Flat.Embed(ebTonicBucketContainer, {
-    //   "width": "100%",
-    //   "height": "300",
-    //   "score": chordScaleBucketsInEb.tonic.scoreId,
-    //   "embedParams": {
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": chordScaleBucketsInEb.tonic.sharingKey
-    //   },
-    // });
-    // const ebSubdominantBucketContainer = document.getElementById("subdominant");
-    // const ebSubdominantBucketEmbed = new Flat.Embed(ebSubdominantBucketContainer, {
-    //   "width": "100%",
-    //   "height": "300",
-    //   "score": chordScaleBucketsInEb.subdominant.scoreId,
-    //   "embedParams": {
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": chordScaleBucketsInEb.subdominant.sharingKey
-    //   },
-    // });
-
-    // const ebDominantBucketContainer = document.getElementById("dominant");
-    // const ebDominantBucketEmbed = new Flat.Embed(ebDominantBucketContainer, {
-    //   "width": "100%",
-    //   "height": "300",
-    //   "score": chordScaleBucketsInEb.dominant.scoreId,
-    //   "embedParams": {
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": chordScaleBucketsInEb.dominant.sharingKey
-    //   },
-    // });
-
-
-    // const drBbContainer = document.getElementById("deep-river-bb");
-    // const drBbEmbed = new Flat.Embed(drBbContainer, {
-    //   "width": "100%",
-    //   "height": "300",
-    //   "score": deepRiverBb.scoreId,
-    //   "embedParams": {
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": deepRiverBb.sharingKey
-    //   },
-    // });
-
-
-    // const drBbCreateContainer = document.getElementById("deep-river-bb-create");
-    // const drBbCreateEmbed = new Flat.Embed(drBbCreateContainer, {
-    //   "width": "100%",
-    //   "height": "400",
-    //   "score": deepRiverBb.scoreId,
-    //   "embedParams": {
-    //     "mode": "edit",
-    //     "toolsetId": NEA_CREATE_TOOLSET_ID,
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": deepRiverBb.sharingKey
-    //   },
-    // });
-
-    // const bbTonicBucketContainer = document.getElementById("tonic-bb");
-    // const bbTonicBucketEmbed = new Flat.Embed(bbTonicBucketContainer, {
-    //   "width": "100%",
-    //   "height": "300",
-    //   "score": chordScaleBucketsInEb.tonic.scoreId,
-    //   "embedParams": {
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": chordScaleBucketsInEb.tonic.sharingKey
-    //   },
-    // });
-
-    // const bbSubdominantBucketContainer = document.getElementById("subdominant-bb");
-    // const bbSubdominantBucketEmbed = new Flat.Embed(bbSubdominantBucketContainer, {
-    //   "width": "100%",
-    //   "height": "300",
-    //   "score": chordScaleBucketsInEb.subdominant.scoreId,
-    //   "embedParams": {
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": chordScaleBucketsInEb.subdominant.sharingKey
-    //   },
-    // });
-
-    // const bbDominantBucketContainer = document.getElementById("dominant-bb");
-    // const bbDominantBucketEmbed = new Flat.Embed(bbDominantBucketContainer, {
-    //   "width": "100%",
-    //   "height": "300",
-    //   "score": chordScaleBucketsInEb.dominant.scoreId,
-    //   "embedParams": {
-    //     "branding": false,
-    //     "controlsPlay": false,
-    //     "appId": appId,
-    //     "sharingKey": chordScaleBucketsInEb.dominant.sharingKey
-    //   },
-    // });
-
-    // drBbCreateEmbed.ready().then(() => {
-    //   // should just replace all pitches with rests? is that the right number of measures already?
-    //   return drBbCreateEmbed.getJSON();
-    // })
-    //   .then(pitchesToRests)
-    //   .then((composeScoreJSON) => {
-    //     return drBbCreateEmbed.loadJSON(composeScoreJSON)
-    //   })
-    //   .catch((err) => {
-    //     console.error('err in preparing drBbCreateEmbed', err)
-    //   })
-
-    // refToChordScaleBuckets(drBbEmbed, bbTonicBucketEmbed, bbSubdominantBucketEmbed, bbDominantBucketEmbed)
-    // // drBbEmbed.ready()
-    // //   .then(() => {
-    // //     return drBbEmbed.getJSON()
-    // //   })
-    // //   .then((pieceScoreJSON) => {
-    // //     const keySignature = keyFromScoreJSON(pieceScoreJSON); //this is a cheat code: i check the metadata of THIS STUDENT (already accounting for their instrument and the piece's composition key) as a letter like F
-    // //     const tonicBucket = getChordScaleInKey('tonic', keySignature.repr);
-
-    // //     const subdominantBucket = getChordScaleInKey('subdominant', keySignature.repr);
-
-    // //     const dominantBucket = getChordScaleInKey('dominant', keySignature.repr);
-
-
-    // //     return fetch('tonic-eb-as-minimized.json') // TODO:  change this to actually grab it from flatio then it can work for each case
-    // //       .then(response => response.json())
-    // //       .then((data) => {
-    // //         console.log(data);
-    // //         return data;
-    // //       })
-    // //       .then(data => {
-    // //         return embedTransposed(tonicBucket, bbTonicBucketEmbed, data, keySignature)
-    // //           .then(() => {
-    // //             return embedTransposed(subdominantBucket, bbSubdominantBucketEmbed, data, keySignature)
-    // //           })
-    // //           .then(() => {
-    // //             embedTransposed(dominantBucket, bbDominantBucketEmbed, data, keySignature)
-    // //           })
-    // //       })
-    // //   })
-    // //   .catch((err) => {
-    // //     console.error('err in preparing drBbEmbed', err)
-    // //   })
+      const tonicDbtrsScaleDegrees = document.getElementById('tonic-dbtrs-scale-degrees')
+      const subdominantDbtrsScaleDegrees = document.getElementById('subdominant-dbtrs-scale-degrees')
+      const dominantDbtrsScaleDegrees = document.getElementById('dominant-dbtrs-scale-degrees')
+      const tonicDbtrsBbScaleDegrees = document.getElementById('tonic-dbtrs-bb-scale-degrees')
+      const subdominantDbtrsBbScaleDegrees = document.getElementById('subdominant-dbtrs-bb-scale-degrees')
+      const dominantDbtrsBbScaleDegrees = document.getElementById('dominant-dbtrs-bb-scale-degrees')
 
     const dbtrsAbContainer = document.getElementById("dbtrs-piccolo");
     const dbtrsAbEmbed = new Flat.Embed(dbtrsAbContainer, {
@@ -847,7 +309,11 @@
       },
     });
 
-    refToChordScaleBuckets(dbtrsAbEmbed, abTonicBucketEmbed, abSubdominantBucketEmbed, abDominantBucketEmbed, 'Piccolo')
+    refToChordScaleBuckets(dbtrsAbEmbed, abTonicBucketEmbed, abSubdominantBucketEmbed, abDominantBucketEmbed, {
+      tonic: tonicDbtrsScaleDegrees,
+      subdominant: subdominantDbtrsScaleDegrees,
+      dominant: dominantDbtrsScaleDegrees
+    }, 'Piccolo')
 
 
     const bbTonicBucketContainerDBTRS = document.getElementById("tonic-dbtrs-bb");
@@ -889,7 +355,11 @@
       },
     });
 
-    refToChordScaleBuckets(dbtrsBbEmbed, bbTonicBucketEmbedDBTRS, bbSubdominantBucketEmbedDBTRS, bbDominantBucketEmbedDBTRS, 'Trumpet')
+    refToChordScaleBuckets(dbtrsBbEmbed, bbTonicBucketEmbedDBTRS, bbSubdominantBucketEmbedDBTRS, bbDominantBucketEmbedDBTRS, {
+      tonic: tonicDbtrsBbScaleDegrees,
+      subdominant: subdominantDbtrsBbScaleDegrees,
+      dominant: dominantDbtrsBbScaleDegrees
+    }, 'Trumpet')
 
   </script>
 </body>
