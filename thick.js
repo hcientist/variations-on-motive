@@ -407,22 +407,28 @@ const refToChordScaleBuckets = (
 };
 
 const pitchesToRests = (pieceScoreJSON) => {
-  const getMeasureTimeSignature = (measure) => {
-    let duration = 8; //default to 8 becasue i reasoned it might be a quarter in some cases
+  const getMeasureTimeSignature = (measure, current) => {
+    let duration = 8; //default to 8 because i reasoned it might be a quarter in some cases
     let maxRests = 4; //bc 4 is a common denominator for musicians
+    let updated = false;
     if (measure.attributes) {
       measure.attributes.forEach((attribute) => {
         if (attribute.divisions) {
           duration = attribute.divisions;
+          updated = true;
         }
         if (attribute.time) {
           if (attribute.time.beats) {
             maxRests = attribute.time.beats;
+            updated = true;
           }
         }
       });
     }
-    return { duration, maxRests };
+    if (updated) {
+      return { duration, maxRests };
+    }
+    return current;
   };
   console.log("pieceScoreJSON", pieceScoreJSON);
   const composeScoreJSON = pieceScoreJSON;
@@ -439,7 +445,7 @@ const pitchesToRests = (pieceScoreJSON) => {
 
   // }
   composeScoreJSON["score-partwise"].part[0].measure.forEach((measure) => {
-    currentTimeSig = getMeasureTimeSignature(measure);
+    currentTimeSig = getMeasureTimeSignature(measure, currentTimeSig); //FIXME: this overwrites later measures with the default
     if (measure.direction) {
       measure.direction.forEach((directionObj) => {
         if (directionObj["direction-type"]) {

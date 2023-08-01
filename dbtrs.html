@@ -166,12 +166,12 @@
     }
 
 
-      const tonicDbtrsScaleDegrees = document.getElementById('tonic-dbtrs-scale-degrees')
-      const subdominantDbtrsScaleDegrees = document.getElementById('subdominant-dbtrs-scale-degrees')
-      const dominantDbtrsScaleDegrees = document.getElementById('dominant-dbtrs-scale-degrees')
-      const tonicDbtrsBbScaleDegrees = document.getElementById('tonic-dbtrs-bb-scale-degrees')
-      const subdominantDbtrsBbScaleDegrees = document.getElementById('subdominant-dbtrs-bb-scale-degrees')
-      const dominantDbtrsBbScaleDegrees = document.getElementById('dominant-dbtrs-bb-scale-degrees')
+    const tonicDbtrsScaleDegrees = document.getElementById('tonic-dbtrs-scale-degrees')
+    const subdominantDbtrsScaleDegrees = document.getElementById('subdominant-dbtrs-scale-degrees')
+    const dominantDbtrsScaleDegrees = document.getElementById('dominant-dbtrs-scale-degrees')
+    const tonicDbtrsBbScaleDegrees = document.getElementById('tonic-dbtrs-bb-scale-degrees')
+    const subdominantDbtrsBbScaleDegrees = document.getElementById('subdominant-dbtrs-bb-scale-degrees')
+    const dominantDbtrsBbScaleDegrees = document.getElementById('dominant-dbtrs-bb-scale-degrees')
 
     const dbtrsAbContainer = document.getElementById("dbtrs-piccolo");
     const dbtrsAbEmbed = new Flat.Embed(dbtrsAbContainer, {
@@ -309,13 +309,6 @@
       },
     });
 
-    refToChordScaleBuckets(dbtrsAbEmbed, abTonicBucketEmbed, abSubdominantBucketEmbed, abDominantBucketEmbed, {
-      tonic: tonicDbtrsScaleDegrees,
-      subdominant: subdominantDbtrsScaleDegrees,
-      dominant: dominantDbtrsScaleDegrees
-    }, 'Piccolo')
-
-
     const bbTonicBucketContainerDBTRS = document.getElementById("tonic-dbtrs-bb");
     const bbTonicBucketEmbedDBTRS = new Flat.Embed(bbTonicBucketContainerDBTRS, {
       "width": "100%",
@@ -355,11 +348,18 @@
       },
     });
 
-    refToChordScaleBuckets(dbtrsBbEmbed, bbTonicBucketEmbedDBTRS, bbSubdominantBucketEmbedDBTRS, bbDominantBucketEmbedDBTRS, {
-      tonic: tonicDbtrsBbScaleDegrees,
-      subdominant: subdominantDbtrsBbScaleDegrees,
-      dominant: dominantDbtrsBbScaleDegrees
-    }, 'Trumpet')
+    refToChordScaleBuckets(dbtrsAbEmbed, abTonicBucketEmbed, abSubdominantBucketEmbed, abDominantBucketEmbed, {
+        tonic: tonicDbtrsScaleDegrees,
+        subdominant: subdominantDbtrsScaleDegrees,
+        dominant: dominantDbtrsScaleDegrees
+      }, 'Piccolo').then(()=>{
+        return refToChordScaleBuckets(dbtrsBbEmbed, bbTonicBucketEmbedDBTRS, bbSubdominantBucketEmbedDBTRS, bbDominantBucketEmbedDBTRS, {
+          tonic: tonicDbtrsBbScaleDegrees,
+          subdominant: subdominantDbtrsBbScaleDegrees,
+          dominant: dominantDbtrsBbScaleDegrees
+        }, 'Trumpet')
+      })
+    
 
   </script>
 </body>
