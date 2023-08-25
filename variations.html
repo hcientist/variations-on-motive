@@ -65,15 +65,28 @@
   <script>
 
     const reverseFlatScore = (orig) => {
+      console.log('orig', JSON.stringify(orig))
       const reversed = orig
       const origMeasures = orig['score-partwise'].part[0].measure
       const reverseNotesInMeasure = (measure) => {
+        console.log('measure', measure)
         const notes = measure.note
-        const reversedNotes = notes.reverse()
+        const simplifiedNotes = notes.map((note) => {
+          const result = {}
+          result.staff = note.staff
+          result.voice = note.voice
+          result.duration = note.duration
+          result.pitch = note.pitch
+          result.type = note.type
+          return result
+        })
+        const reversedNotes = simplifiedNotes.reverse()
+        console.log('reversedNotes', reversedNotes)
         return { ...measure, note: reversedNotes }
       }
       const reversedMeasures = origMeasures.map(reverseNotesInMeasure)
       reversed['score-partwise'].part[0].measure = reversedMeasures
+      console.log('reversed', JSON.stringify(reversed))
       return reversed
     }
 
@@ -111,8 +124,29 @@
       .then((scores) => {
         const json = scores[0]
         const reversed = reverseFlatScore(json)
-        const reversedEmbed = createEmbed('variation-01', '647e0783d82978cff39e85d3', '13aff2a9b211e04c77b0621f4361f2f5da02291d6108a8f5523a279e2a36aaecc6130d51835bd95305808977f6a53467f19659d6062fa599e525a071ea27e767')
-        reversedEmbed.then(()=>reversedEmbed.loadJSON(reversed))
+        // const reversedEmbed = createEmbed('variation-01', '647e0783d82978cff39e85d3', '13aff2a9b211e04c77b0621f4361f2f5da02291d6108a8f5523a279e2a36aaecc6130d51835bd95305808977f6a53467f19659d6062fa599e525a071ea27e767')
+
+        const variation01Container = document.getElementById('variation-01');
+        const reversedEmbed = new Flat.Embed(variation01Container, {
+            "width": "100%",
+            "height": "300",
+            "score": '647e0783d82978cff39e85d3',
+            "embedParams": {
+              "mode": "edit",
+              "toolsetId": NEA_CREATE_TOOLSET_ID,
+              "branding": false,
+              "controlsPlay": false,
+              "appId": appId,
+              "sharingKey": '13aff2a9b211e04c77b0621f4361f2f5da02291d6108a8f5523a279e2a36aaecc6130d51835bd95305808977f6a53467f19659d6062fa599e525a071ea27e767'
+            },
+          });
+        reversedEmbed.ready().then(() => {
+          console.log('reversedEmbed', reversedEmbed)
+          reversedEmbed.loadJSON(reversed)
+            .then(console.log)
+            .catch(console.error)
+        }
+        )
       })
       .catch(console.error)
 
