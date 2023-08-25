@@ -208,6 +208,10 @@
       .then((composeScoreJSON) => {
         return drEbCreateEmbed.loadJSON(composeScoreJSON)
       })
+      .then(()=> drEbCreateEmbed.ready())
+      .then(()=>{
+        console.log('drEbCreateEmbed almost ready for create, needs color for measures', drEbCreateContainer)
+      })
       .catch((err) => {
         console.error('err in preparing drEbCreateEmbed', err)
       })
@@ -224,6 +228,26 @@
         "sharingKey": chordScaleBucketsInEb.tonic.sharingKey
       },
     });
+
+    // ebTonicBucketEmbed.ready().then(()=>{
+    //   return ebTonicBucketEmbed.getJSON()
+    // }).then((data)=>{
+    //   console.log('ebTonicBucketEmbed data:', data)
+    //   const increasedOctave = data;
+    //   data['score-partwise'].part[0].measure.forEach(measure=>{
+    //     measure.note.forEach(note=>{
+    //       if(note.pitch){
+    //         const current = note.pitch.octave
+    //         note.pitch.octave = parseInt(current, 10) + 1+'';
+    //       }
+    //     })
+    //   })
+    //   console.log('shifted octaves up', data)
+    //   return ebTonicBucketEmbed.loadJSON(data)
+    // }).catch((err)=>{
+    //   console.error('err in ebTonicBucketEmbed', err)
+    // })
+
     const ebSubdominantBucketContainer = document.getElementById("subdominant");
     const ebSubdominantBucketEmbed = new Flat.Embed(ebSubdominantBucketContainer, {
       "width": "100%",

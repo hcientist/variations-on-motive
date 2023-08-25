@@ -19,7 +19,6 @@ const chordScaleBucketsInEb = {
   },
 };
 
-
 const chromaticScale = [
   {
     sharp: {
@@ -255,7 +254,6 @@ const negatives = {
 const CIRCLE_OF_FIFTHS = Object.assign({}, nonNegative, negatives);
 
 const keyFromScoreJSON = (pieceScoreJSON) => {
-  
   // console.log(CIRCLE_OF_FIFTHS);
   // console.log('problem here geting key', pieceScoreJSON, pieceScoreJSON?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.[0]?.key?.fifths)
   const keySignature = {
@@ -273,7 +271,14 @@ const keyFromScoreJSON = (pieceScoreJSON) => {
   return keySignature;
 };
 
-const embedTransposed = (bucket, embed, template, keySig, instrName) => {
+const embedTransposed = (
+  bucket,
+  embed,
+  template,
+  keySig,
+  instrName,
+  octaveShift
+) => {
   // change the notes in the score from whatever they are in tonic and eb to what we're given
   const scorePart =
     template?.["score-partwise"]?.["part-list"]?.["score-part"]?.[0];
@@ -301,13 +306,22 @@ const embedTransposed = (bucket, embed, template, keySig, instrName) => {
     }
   );
 
+  if (octaveShift !== 0) {
+    template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.forEach(
+      (element) => {
+        element.transpose = {
+          chromatic: "0",
+          "octave-change": `${octaveShift}`,
+        };
+      }
+    );
+  }
+
   const resultTransposed = embed.ready().then(() => {
     return embed.loadJSON(template);
   });
   return resultTransposed;
 };
-
-
 
 const bucketToString = (bucket) => {
   let alter = "";
@@ -332,7 +346,8 @@ const refToChordScaleBuckets = (
   subdominantEmbed,
   dominantEmbed,
   scaleDegreeElems,
-  instrName
+  instrName,
+  octaveShift = 0
 ) => {
   return refEmbed
     .ready()
@@ -379,7 +394,8 @@ const refToChordScaleBuckets = (
             tonicEmbed,
             data,
             keySignature,
-            instrName
+            instrName,
+            octaveShift
           )
             .then(() => {
               return embedTransposed(
@@ -387,7 +403,8 @@ const refToChordScaleBuckets = (
                 subdominantEmbed,
                 data,
                 keySignature,
-                instrName
+                instrName,
+                octaveShift
               );
             })
             .then(() => {
@@ -396,7 +413,8 @@ const refToChordScaleBuckets = (
                 dominantEmbed,
                 data,
                 keySignature,
-                instrName
+                instrName,
+                octaveShift
               );
             });
         });
@@ -457,6 +475,8 @@ const pitchesToRests = (pieceScoreJSON) => {
       });
     }
 
+    const bucketColors = ["#E75B5C", "#265C5C", "#4390E2"];
+
     // measure.note = Array(currentTimeSig.maxRests).fill({rest: {}, duration:currentTimeSig.duration})
     measure.note = Array.from({ length: currentTimeSig.maxRests }, (i, j) => {
       return {
@@ -465,6 +485,7 @@ const pitchesToRests = (pieceScoreJSON) => {
         "$adagio-location": {
           timePos: j * duration,
         },
+        // '$color': bucketColors[j%bucketColors.length],
       };
     });
 

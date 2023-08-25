@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unit Test </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+  <link rel="icon" href="https://fav.farm/👻">
+</head>
+
+<body class="container">
+  <section>
+    <h1>motive</h1>
+    <div id="motive"></div>
+  </section>
+  <section>
+    <h1>variation-01</h1>
+    <h2>Retrograde</h2>
+    <p>reverse the notes (each note keeps its pitch and duration, but the order of all notes is reversed)</p>
+    <div id="variation-01"></div>
+  </section>
+  <section>
+    <h1>variation-02</h1>
+    <div id="variation-02"></div>
+  </section>
+  <section>
+    <h1>variation-03</h1>
+    <div id="variation-03"></div>
+  </section>
+  <section>
+    <h1>variation-04</h1>
+    <div id="variation-04"></div>
+  </section>
+  <section>
+    <h1>variation-05</h1>
+    <div id="variation-05"></div>
+  </section>
+  <section>
+    <h1>variation-06</h1>
+    <div id="variation-06"></div>
+  </section>
+  <section>
+    <h1>variation-07</h1>
+    <div id="variation-07"></div>
+  </section>
+  <section>
+    <h1>variation-08</h1>
+    <div id="variation-08"></div>
+  </section>
+  <section>
+    <h1>variation-09</h1>
+    <div id="variation-09"></div>
+  </section>
+  <section>
+    <h1>variation-10</h1>
+    <div id="variation-10"></div>
+  </section>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+    crossorigin="anonymous"></script>
+  <script src="https://prod.flat-cdn.com/embed-js/v1.5.1/embed.min.js"></script>
+  <script src="thick.js"></script>
+  <script>
+
+    const reverseFlatScore = (orig) => {
+      const reversed = orig
+      const origMeasures = orig['score-partwise'].part[0].measure
+      const reverseNotesInMeasure = (measure) => {
+        const notes = measure.note
+        const reversedNotes = notes.reverse()
+        return { ...measure, note: reversedNotes }
+      }
+      const reversedMeasures = origMeasures.map(reverseNotesInMeasure)
+      reversed['score-partwise'].part[0].measure = reversedMeasures
+      return reversed
+    }
+
+    const scores = [
+      {
+        id: "motive",
+        "scoreId": "647e0639e9e8c299af2e5799",
+        "sharingKey": "1af986d74ed7d96068815dc7c797acdc9dacc9ebd9684c0b2cda38be7c4b09f5190de3bf06b26b3d29af45f79f4939ed8532ae8107d796a47d7f7f1dc8c95009"
+      }
+    ]
+    const createEmbed = (containerElemId, scoreId, sharingKey) => {
+      const motiveContainer = document.getElementById(containerElemId);
+      const motiveEmbed = new Flat.Embed(motiveContainer, {
+        "width": "100%",
+        "height": "300",
+        "score": scoreId,
+        "embedParams": {
+          "mode": "edit",
+          "toolsetId": NEA_CREATE_TOOLSET_ID,
+          "branding": false,
+          "controlsPlay": false,
+          "appId": appId,
+          "sharingKey": sharingKey
+        },
+      });
+      return motiveEmbed.ready().then(() => motiveEmbed)
+      // return {embed: blankEmbed, ready: blankEmbed.ready()};
+    };
+
+    const embeds = scores.map(({ id, scoreId, sharingKey }) => createEmbed(id, scoreId, sharingKey))
+    const scoreJSONs = Promise.all(embeds)
+      .then((es) => Promise.all(es.map((e) => e.getJSON())))
+
+    scoreJSONs
+      .then((scores) => {
+        const json = scores[0]
+        const reversed = reverseFlatScore(json)
+        const reversedEmbed = createEmbed('variation-01', '647e0783d82978cff39e85d3', '13aff2a9b211e04c77b0621f4361f2f5da02291d6108a8f5523a279e2a36aaecc6130d51835bd95305808977f6a53467f19659d6062fa599e525a071ea27e767')
+        reversedEmbed.then(()=>reversedEmbed.loadJSON(reversed))
+      })
+      .catch(console.error)
+
+
+  </script>
+</body>
+
+</html>

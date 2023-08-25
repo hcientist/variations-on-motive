@@ -11,6 +11,7 @@
   <div id="embed-motive-container"></div>
   <div id="embed-variation-container"></div>
   <script src="https://prod.flat-cdn.com/embed-js/v1.5.1/embed.min.js"></script>
+  <script src="thick.js"></script>
   <script>
     const appId = '60a51c906bcde01fc75a3ad0';
     const NEA_CREATE_TOOLSET_ID = '64be80de738efff96cc27edd';
@@ -209,144 +210,144 @@
 
     })
 
-    // given a flatIOJSON object, create a new flatIOJSON object with 1 part with 1 measure, with rests in the durations of the notes in the given object's first part's first measure 
-    function createRestsInDurations(notes) {
+  //   // given a flatIOJSON object, create a new flatIOJSON object with 1 part with 1 measure, with rests in the durations of the notes in the given object's first part's first measure 
+  //   function createRestsInDurations(notes) {
 
-    }
-  const chromaticScale = [
-    {
-      sharp: {
-        step: 'C', alter: ''
-      }, flat: {
-        step: 'C', alter: ''
-      }
-    },
-    {
-      sharp: {
-        step: 'C#', alter: '1'
-      }, flat: {
-        step: 'Db', alter: '-1'
-      }
-    },
-    {
-      sharp: {
-        step: 'D', alter: ''
-      }, flat: {
-        step: 'D', alter: ''
-      }
-    },
-    {
-      sharp: {
-        step: 'D#', alter: '1'
-      }, flat: {
-        step: 'Eb', alter: '-1'
-      }
-    },
-    {
-      sharp: {
-        step: 'E', alter: ''
-      }, flat: {
-        step: 'E', alter: ''
-      }
-    },
-    {
-      sharp: {
-        step: 'F', alter: ''
-      }, flat: {
-        step: 'F', alter: ''
-      }
-    },
-    {
-      sharp: {
-        step: 'F#', alter: '1'
-      }, flat: {
-        step: 'Gb', alter: '-1'
-      }
-    },
-    {
-      sharp: {
-        step: 'G', alter: ''
-      }, flat: {
-        step: 'G', alter: ''
-      }
-    },
-    {
-      sharp: {
-        step: 'G#', alter: '1'
-      }, flat: {
-        step: 'Ab', alter: '-1'
-      }
-    },
-    {
-      sharp: {
-        step: 'A', alter: ''
-      }, flat: {
-        step: 'A', alter: ''
-      }
-    },
-    {
-      sharp: {
-        step: 'A#', alter: '1'
-      }, flat: {
-        step: 'Bb', alter: '-1'
-      }
-    },
-    {
-      sharp: {
-        step: 'B', alter: ''
-      }, flat: {
-        step: 'B', alter: ''
-      }
-    }
-  ];
-  const noteToScaleIdx = {
-    'C': 0,
-    'C#': 1,
-    'Db': 1,
-    'D': 2,
-    'D#': 3,
-    'Eb': 3,
-    'E': 4,
-    'F': 5,
-    'F#': 6,
-    'Gb': 6,
-    'G': 7,
-    'G#': 8,
-    'Ab': 8,
-    'A': 9,
-    'A#': 10,
-    'Bb': 10,
-    'B': 11
-  }
+  //   }
+  // const chromaticScale = [
+  //   {
+  //     sharp: {
+  //       step: 'C', alter: ''
+  //     }, flat: {
+  //       step: 'C', alter: ''
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'C#', alter: '1'
+  //     }, flat: {
+  //       step: 'Db', alter: '-1'
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'D', alter: ''
+  //     }, flat: {
+  //       step: 'D', alter: ''
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'D#', alter: '1'
+  //     }, flat: {
+  //       step: 'Eb', alter: '-1'
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'E', alter: ''
+  //     }, flat: {
+  //       step: 'E', alter: ''
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'F', alter: ''
+  //     }, flat: {
+  //       step: 'F', alter: ''
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'F#', alter: '1'
+  //     }, flat: {
+  //       step: 'Gb', alter: '-1'
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'G', alter: ''
+  //     }, flat: {
+  //       step: 'G', alter: ''
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'G#', alter: '1'
+  //     }, flat: {
+  //       step: 'Ab', alter: '-1'
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'A', alter: ''
+  //     }, flat: {
+  //       step: 'A', alter: ''
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'A#', alter: '1'
+  //     }, flat: {
+  //       step: 'Bb', alter: '-1'
+  //     }
+  //   },
+  //   {
+  //     sharp: {
+  //       step: 'B', alter: ''
+  //     }, flat: {
+  //       step: 'B', alter: ''
+  //     }
+  //   }
+  // ];
+  // const noteToScaleIdx = {
+  //   'C': 0,
+  //   'C#': 1,
+  //   'Db': 1,
+  //   'D': 2,
+  //   'D#': 3,
+  //   'Eb': 3,
+  //   'E': 4,
+  //   'F': 5,
+  //   'F#': 6,
+  //   'Gb': 6,
+  //   'G': 7,
+  //   'G#': 8,
+  //   'Ab': 8,
+  //   'A': 9,
+  //   'A#': 10,
+  //   'Bb': 10,
+  //   'B': 11
+  // }
 
-    function shiftPartBySemitones(part, semitones, useFlats = true) {
-      return part.map((partI, i) => {
-        return {
-          "measure": partI.measure.map((measure, j) => {
-            const modifiedMeasure = measure;
-            modifiedMeasure.note = modifiedMeasure.note.map((note) => {
-              const modifiedNote = note;
-              let alter = ''
-              if (note.pitch?.alter == -1) {
-                alter = 'b'
-              } else if (note.pitch?.alter == 1) {
-                alter = '#'
-              }
-              const notePitch = `${note.pitch.step}${alter}`;
+  //   function shiftPartBySemitones(part, semitones, useFlats = true) {
+  //     return part.map((partI, i) => {
+  //       return {
+  //         "measure": partI.measure.map((measure, j) => {
+  //           const modifiedMeasure = measure;
+  //           modifiedMeasure.note = modifiedMeasure.note.map((note) => {
+  //             const modifiedNote = note;
+  //             let alter = ''
+  //             if (note.pitch?.alter == -1) {
+  //               alter = 'b'
+  //             } else if (note.pitch?.alter == 1) {
+  //               alter = '#'
+  //             }
+  //             const notePitch = `${note.pitch.step}${alter}`;
 
-              const shiftedIdx = (noteToScaleIdx[notePitch] + semitones) % 12;
-              const shiftedNote = chromaticScale[shiftedIdx][useFlats ? 'flat' : 'sharp']
-              modifiedNote.pitch.step = shiftedNote.step;
-              modifiedNote.pitch.alter = shiftedNote.alter;
-              return modifiedNote;
-            })
-            return modifiedMeasure
-          }),
-          "$id": `P${i}`,
-          "uuid": `P${i}`
-        }
-      })
-    }
+  //             const shiftedIdx = (noteToScaleIdx[notePitch] + semitones) % 12;
+  //             const shiftedNote = chromaticScale[shiftedIdx][useFlats ? 'flat' : 'sharp']
+  //             modifiedNote.pitch.step = shiftedNote.step;
+  //             modifiedNote.pitch.alter = shiftedNote.alter;
+  //             return modifiedNote;
+  //           })
+  //           return modifiedMeasure
+  //         }),
+  //         "$id": `P${i}`,
+  //         "uuid": `P${i}`
+  //       }
+  //     })
+  //   }
 
 
 
@@ -366,100 +367,101 @@
     //     * E flat == Eb:
     //         * pitches: `D, F, Ab, Bb, C`
 
-    function getChordScaleInKey(chordScale, key) {
+    // function getChordScaleInKey(chordScale, key) {
       
-      const tonicBucketIntervals = [
-        { 'name': '1', 'offset': 0 },   // Unison
-        { 'name': '2', 'offset': 2 },   // Major 2nd
-        { 'name': '3', 'offset': 4 },   // Major 3rd
-        { 'name': '5', 'offset': 7 },   // Perfect 5th
-        { 'name': '6', 'offset': 9 }   // Major 6th
-      ]
+    //   const tonicBucketIntervals = [
+    //     { 'name': '1', 'offset': 0 },   // Unison
+    //     { 'name': '2', 'offset': 2 },   // Major 2nd
+    //     { 'name': '3', 'offset': 4 },   // Major 3rd
+    //     { 'name': '5', 'offset': 7 },   // Perfect 5th
+    //     { 'name': '6', 'offset': 9 }   // Major 6th
+    //   ]
 
-      const subdominantBucketIntervals = [
-        { 'name': '1', 'offset': 0 },   // Unison
-        { 'name': '2', 'offset': 2 },   // Major 2nd
-        { 'name': '4', 'offset': 5 },   // Perfect 4th
-        { 'name': '5', 'offset': 7 },   // Perfect 5th
-        { 'name': '6', 'offset': 9 }   // Major 6th
-      ]
+    //   const subdominantBucketIntervals = [
+    //     { 'name': '1', 'offset': 0 },   // Unison
+    //     { 'name': '2', 'offset': 2 },   // Major 2nd
+    //     { 'name': '4', 'offset': 5 },   // Perfect 4th
+    //     { 'name': '5', 'offset': 7 },   // Perfect 5th
+    //     { 'name': '6', 'offset': 9 }   // Major 6th
+    //   ]
 
-      const dominantBucketIntervals = [
-        { 'name': '2', 'offset': 2 },   // Major 2nd
-        { 'name': '4', 'offset': 5 },   // Perfect 4th
-        { 'name': '5', 'offset': 7 },   // Perfect 5th
-        { 'name': '6', 'offset': 9 },   // Major 6th
-        { 'name': '7', 'offset': 11 }   // 7th
-      ]
+    //   const dominantBucketIntervals = [
+    //     { 'name': '2', 'offset': 2 },   // Major 2nd
+    //     { 'name': '4', 'offset': 5 },   // Perfect 4th
+    //     { 'name': '5', 'offset': 7 },   // Perfect 5th
+    //     { 'name': '6', 'offset': 9 },   // Major 6th
+    //     { 'name': '7', 'offset': 11 }   // 7th
+    //   ]
 
-      const chordScaleIntervals = {
-        tonic: tonicBucketIntervals,
-        subdominant: subdominantBucketIntervals,
-        dominant: dominantBucketIntervals
-      }
+    //   const chordScaleIntervals = {
+    //     tonic: tonicBucketIntervals,
+    //     subdominant: subdominantBucketIntervals,
+    //     dominant: dominantBucketIntervals
+    //   }
 
-      const firstPitchIdx = noteToScaleIdx[key];
-      const firstPitchObj = chromaticScale[firstPitchIdx];
-      return chordScaleIntervals[chordScale].map((interval) => {
-        return chromaticScale[(firstPitchIdx + interval.offset) % chromaticScale.length];
-        // const pitch = key.pitch;
-        // const step = pitch.step;
-        // const alter = pitch.alter;
-        // const octave = pitch.octave;
-        // const offset = interval.offset;
-        // const newStep = step;
-        // const newAlter = alter;
-        // const newOctave = octave;
-        // return {
-        //   step: newStep,
-        //   alter: newAlter,
-        //   octave: newOctave
-        // }
-      })
+    //   const firstPitchIdx = noteToScaleIdx[key];
+    //   const firstPitchObj = chromaticScale[firstPitchIdx];
+    //   return chordScaleIntervals[chordScale].map((interval) => {
+    //     return chromaticScale[(firstPitchIdx + interval.offset) % chromaticScale.length];
+    //     // const pitch = key.pitch;
+    //     // const step = pitch.step;
+    //     // const alter = pitch.alter;
+    //     // const octave = pitch.octave;
+    //     // const offset = interval.offset;
+    //     // const newStep = step;
+    //     // const newAlter = alter;
+    //     // const newOctave = octave;
+    //     // return {
+    //     //   step: newStep,
+    //     //   alter: newAlter,
+    //     //   octave: newOctave
+    //     // }
+    //   })
 
 
-      // chordScalesinEb = {
-      //   tonic: [
-      //     {
-      //       sharp: {
-      //         step: 'D', alter: '1'
-      //       }, flat: {
-      //         step: 'E', alter: '-1'
-      //       }
-      //     },
-      //     {
-      //       sharp: {
-      //         step: 'F', alter: ''
-      //       }, flat: {
-      //         step: 'F', alter: ''
-      //       }
-      //     },
-      //     {
-      //       sharp: {
-      //         step: 'G', alter: ''
-      //       }, flat: {
-      //         step: 'G', alter: ''
-      //       }
-      //     },
-      //     {
-      //       sharp: {
-      //         step: 'A', alter: '1'
-      //       }, flat: {
-      //         step: 'B', alter: '-1'
-      //       }
-      //     },
-      //     {
-      //       sharp: {
-      //         step: 'C', alter: ''
-      //       }, flat: {
-      //         step: 'C', alter: ''
-      //       }
-      //     }
-      //   ]
-      // }
+    //   // chordScalesinEb = {
+    //   //   tonic: [
+    //   //     {
+    //   //       sharp: {
+    //   //         step: 'D', alter: '1'
+    //   //       }, flat: {
+    //   //         step: 'E', alter: '-1'
+    //   //       }
+    //   //     },
+    //   //     {
+    //   //       sharp: {
+    //   //         step: 'F', alter: ''
+    //   //       }, flat: {
+    //   //         step: 'F', alter: ''
+    //   //       }
+    //   //     },
+    //   //     {
+    //   //       sharp: {
+    //   //         step: 'G', alter: ''
+    //   //       }, flat: {
+    //   //         step: 'G', alter: ''
+    //   //       }
+    //   //     },
+    //   //     {
+    //   //       sharp: {
+    //   //         step: 'A', alter: '1'
+    //   //       }, flat: {
+    //   //         step: 'B', alter: '-1'
+    //   //       }
+    //   //     },
+    //   //     {
+    //   //       sharp: {
+    //   //         step: 'C', alter: ''
+    //   //       }, flat: {
+    //   //         step: 'C', alter: ''
+    //   //       }
+    //   //     }
+    //   //   ]
+    //   // }
 
-    }
+    // }
 
+    function 
 
   </script>
 
