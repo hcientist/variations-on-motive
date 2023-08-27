@@ -71,8 +71,11 @@
       const reverseNotesInMeasure = (measure) => {
         console.log('measure', measure)
         const notes = measure.note
-        const simplifiedNotes = notes.map((note) => {
+        let timePos = 0
+        const simplifiedNotes = notes.map((note, i) => {
           const result = {}
+          result["$adagio-location"] = { timePos }
+          timePos += note.duration
           result.staff = note.staff
           result.voice = note.voice
           result.duration = note.duration
@@ -128,18 +131,18 @@
 
         const variation01Container = document.getElementById('variation-01');
         const reversedEmbed = new Flat.Embed(variation01Container, {
-            "width": "100%",
-            "height": "300",
-            "score": '647e0783d82978cff39e85d3',
-            "embedParams": {
-              "mode": "edit",
-              "toolsetId": NEA_CREATE_TOOLSET_ID,
-              "branding": false,
-              "controlsPlay": false,
-              "appId": appId,
-              "sharingKey": '13aff2a9b211e04c77b0621f4361f2f5da02291d6108a8f5523a279e2a36aaecc6130d51835bd95305808977f6a53467f19659d6062fa599e525a071ea27e767'
-            },
-          });
+          "width": "100%",
+          "height": "300",
+          "score": '647e0783d82978cff39e85d3',
+          "embedParams": {
+            "mode": "edit",
+            "toolsetId": NEA_CREATE_TOOLSET_ID,
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+            "sharingKey": '13aff2a9b211e04c77b0621f4361f2f5da02291d6108a8f5523a279e2a36aaecc6130d51835bd95305808977f6a53467f19659d6062fa599e525a071ea27e767'
+          },
+        });
         reversedEmbed.ready().then(() => {
           console.log('reversedEmbed', reversedEmbed)
           reversedEmbed.loadJSON(reversed)
