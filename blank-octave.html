@@ -24,10 +24,15 @@
     </ul>
     <div id="amazing-grace-melody-8va"></div>
   </section>
+  <section>
+    <p>Blank and baseURL</p>
+    <div id="blank-blank"></div>
+  </section>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
     crossorigin="anonymous"></script>
-  <script src="https://prod.flat-cdn.com/embed-js/v1.5.1/embed.min.js"></script>
+  <!-- <script src="https://prod.flat-cdn.com/embed-js/v1.5.1/embed.min.js"></script> -->
+  <script src="embed.min.js"></script>
   <script src="thick.js"></script>
   <script>
     const scores = [
@@ -61,10 +66,24 @@
       // return {embed: blankEmbed, ready: blankEmbed.ready()};
     };
 
-    const embeds = scores.map(({ id, scoreId, sharingKey }) => createEmbed(id, scoreId, sharingKey))
-    const scoreJSONs = Promise.all(embeds)
-      .then((es) => Promise.all(es.map((e)=>e.getJSON())))
-    scoreJSONs.then(console.log)
+    const blankBlankElem = document.getElementById('blank-blank')
+    const bbEmbed = new Flat.Embed(blankBlankElem, {
+      "width": "100%",
+      "height": "300",
+      "embedParams": {
+        "mode": "edit",
+        "toolsetId": NEA_CREATE_TOOLSET_ID,
+        "branding": false,
+        "controlsPlay": false,
+        "appId": appId,
+        "baseURL": "https://flat.io/embed"
+      },
+    });
+
+    // const embeds = scores.map(({ id, scoreId, sharingKey }) => createEmbed(id, scoreId, sharingKey))
+    // const scoreJSONs = Promise.all(embeds)
+    //   .then((es) => Promise.all(es.map((e)=>e.getJSON())))
+    // scoreJSONs.then(console.log)
   </script>
 </body>
 
