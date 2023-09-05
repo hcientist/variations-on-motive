@@ -16,22 +16,46 @@
     <div id="motive"></div>
   </section>
   <section>
-    <h1>variation-01</h1>
-    <h2>Retrograde</h2>
-    <p>reverse the notes (each note keeps its pitch and duration, but the order of all notes is reversed)</p>
-    <div id="variation-01"></div>
+    <details open>
+      <summary>
+        <h1>variation-01 - Retrograde</h1>
+      </summary>
+      <p>reverse the notes (each note keeps its pitch and duration, but the order of all notes is reversed)</p>
+      <div id="variation-01"></div>
+    </details>
   </section>
   <section>
-    <h1>variation-02</h1>
-    <div id="variation-02"></div>
+    <details open>
+      <summary>
+        <h1>variation-02 - Rhythmic Shift 1/8</h1>
+      </summary>
+      <p>Rhythmic Shift - one 8th note: take the last eighth note of the measure (splitting the last note into eighths
+        as
+        necessary), and move it to the front of the line.</p>
+      <div id="variation-02"></div>
+    </details>
   </section>
   <section>
-    <h1>variation-03</h1>
-    <div id="variation-03"></div>
+    <details open>
+      <summary>
+        <h1>variation-03 - Rhythmic Shift 2/8</h1>
+      </summary>
+      <p>Rhythmic Shift - one 8th note: take the last eighth note of the measure (splitting the last note into eighths
+        as
+        necessary), and move it to the front of the line, but twice</p>
+      <div id="variation-03"></div>
+    </details>
   </section>
   <section>
-    <h1>variation-04</h1>
-    <div id="variation-04"></div>
+    <details open>
+      <summary>
+        <h1>variation-04 - Rhythmic Shift 3/8</h1>
+      </summary>
+      <p>Rhythmic Shift - one 8th note: take the last eighth note of the measure (splitting the last note into eighths
+        as
+        necessary), and move it to the front of the line, but thrice</p>
+      <div id="variation-04"></div>
+    </details>
   </section>
   <section>
     <h1>variation-05</h1>
@@ -72,7 +96,7 @@
       const reversed = orig
       const origMeasures = orig['score-partwise'].part[0].measure
       const reverseNotesInMeasure = (measure) => {
-        console.log('measure', measure)
+        // console.log('measure', measure)
         const notes = measure.note
         let timePos = 0 // 0:1/4, skip 1, 2:1/8, 3:1/8, 4:1/4, skip 5, 6:1/4
         // 1/4,      1/4,        1/8, 1/8, 1/4
@@ -92,8 +116,8 @@
         const reversedNotes = simplifiedNotes.reverse()
         const setAdagioLocations = (notes) => {
           let timePos = 0
-          notes.forEach((note)=> {
-            note["$adagio-location"] = {timePos}
+          notes.forEach((note) => {
+            note["$adagio-location"] = { timePos }
             timePos += parseInt(note.duration)
           })
           return notes
@@ -106,6 +130,74 @@
       reversed['score-partwise'].part[0].measure = reversedMeasures
       console.log('reversed', JSON.stringify(reversed))
       return reversed
+    }
+
+
+    const rhythmicShift = (orig, shiftEighths) => {
+      console.log('orig for shifting', JSON.stringify(orig), shiftEighths)
+      // console.log('orig', JSON.stringify(orig))
+      const shifted = orig
+      const origMeasures = orig['score-partwise'].part[0].measure
+      const shiftNotesInMeasure = (measure, eighths) => {
+        console.log('measure to shift', measure, eighths)
+        const notes = measure.note
+        // let timePos = 0 // 0:1/4, skip 1, 2:1/8, 3:1/8, 4:1/4, skip 5, 6:1/4
+        // 1/4,      1/4,        1/8, 1/8, 1/4
+        // 0, skip1, 2,   skip3, 4,    5 , 6
+        const simplifiedNotes = notes.map((note, i) => {
+          const result = {}
+          // result["$adagio-location"] = { timePos }
+          // result ["$adagio-location"] = {timePos: 7}
+          // timePos += note.duration
+          result.staff = note.staff
+          result.voice = note.voice
+          result.duration = note.duration
+          result.pitch = note.pitch
+          result.type = note.type
+          return result
+        })
+
+        for (let i = 0; i < eighths; i++) {
+
+          console.log('simplifiedNotes for shift', simplifiedNotes)
+          // do we need to split the last note?
+          if (simplifiedNotes[simplifiedNotes.length - 1].duration > 1) {
+
+            const lastNote = simplifiedNotes[simplifiedNotes.length - 1]
+            console.log('splitting last note', lastNote)
+            const splitNote = {
+              ...lastNote,
+              duration: 1,
+            }
+            const remainderNote = {
+              ...lastNote,
+              duration: lastNote.duration - 1, // FIXME: is this a reasonable assumption? like what if the last note is duration 4 (a half note)? is there a note with duration 3 to leave at the end of the measure?
+            }
+            console.log(splitNote, remainderNote)
+            simplifiedNotes[simplifiedNotes.length - 1] = remainderNote
+            simplifiedNotes.push(splitNote)
+          }
+
+          simplifiedNotes.unshift(simplifiedNotes.pop())
+        }
+
+        const shiftededNotes = simplifiedNotes
+        const setAdagioLocations = (notes) => {
+          let timePos = 0
+          notes.forEach((note) => {
+            note["$adagio-location"] = { timePos }
+            timePos += parseInt(note.duration)
+          })
+          return notes
+        }
+        const shiftededNotesWithLocations = setAdagioLocations(shiftededNotes)
+        console.log('shiftededNotes', shiftededNotesWithLocations)
+        return { ...measure, note: shiftededNotesWithLocations }
+      }
+      const shiftedMeasures = origMeasures.map(m => shiftNotesInMeasure(m, shiftEighths))
+      shifted['score-partwise'].part[0].measure = shiftedMeasures
+      console.log('shifted', JSON.stringify(shifted))
+      return shifted
     }
 
     const scores = [
@@ -141,7 +233,8 @@
     scoreJSONs
       .then((scores) => {
         const json = scores[0]
-        const reversed = reverseFlatScore(json)
+        const origStr = JSON.stringify(json)
+        const reversed = reverseFlatScore(JSON.parse(origStr.slice()))
         // const reversedEmbed = createEmbed('variation-01', '647e0783d82978cff39e85d3', '13aff2a9b211e04c77b0621f4361f2f5da02291d6108a8f5523a279e2a36aaecc6130d51835bd95305808977f6a53467f19659d6062fa599e525a071ea27e767')
 
         const variation01Container = document.getElementById('variation-01');
@@ -162,8 +255,71 @@
           reversedEmbed.loadJSON(reversed)
             .then(console.log)
             .catch(console.error)
-        }
-        )
+        })
+
+        const shift1 = rhythmicShift(JSON.parse(origStr.slice()), 1)
+        const shift1Container = document.getElementById('variation-02');
+        const shift1Embed = new Flat.Embed(shift1Container, {
+          "width": "100%",
+          "height": "300",
+          "score": 'blank',
+          "embedParams": {
+            "mode": "edit",
+            "toolsetId": NEA_CREATE_TOOLSET_ID,
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+          },
+        });
+        shift1Embed.ready().then(() => {
+          console.log('shift1Embed', shift1Embed)
+          shift1Embed.loadJSON(shift1)
+            .then(console.log)
+            .catch(console.error)
+        })
+
+        const shift2 = rhythmicShift(JSON.parse(origStr.slice()), 2)
+        const shift2Container = document.getElementById('variation-03');
+        const shift2Embed = new Flat.Embed(shift2Container, {
+          "width": "100%",
+          "height": "300",
+          "score": 'blank',
+          "embedParams": {
+            "mode": "edit",
+            "toolsetId": NEA_CREATE_TOOLSET_ID,
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+          },
+        });
+        shift2Embed.ready().then(() => {
+          console.log('shift2Embed', shift2Embed)
+          shift2Embed.loadJSON(shift2)
+            .then(console.log)
+            .catch(console.error)
+        })
+
+        const shift3 = rhythmicShift(JSON.parse(origStr.slice()), 3)
+        const shift3Container = document.getElementById('variation-04');
+        const shift3Embed = new Flat.Embed(shift3Container, {
+          "width": "100%",
+          "height": "300",
+          "score": 'blank',
+          "embedParams": {
+            "mode": "edit",
+            "toolsetId": NEA_CREATE_TOOLSET_ID,
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+          },
+        });
+        shift3Embed.ready().then(() => {
+          console.log('shift3Embed', shift3Embed)
+          shift3Embed.loadJSON(shift3)
+            .then(console.log)
+            .catch(console.error)
+        })
+
       })
       .catch(console.error)
 
