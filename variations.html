@@ -58,15 +58,25 @@
     </details>
   </section>
   <section>
-    <h1>variation-05</h1>
+    <details open>
+      <summary>
+        <h1>variation-05 - Melodic Shift 1 Note</h1>
+      </summary>
+      <p>Melodic Shift - One Note: take the first pitch and move it to the last note of the measure</p>
     <div id="variation-05"></div>
   </section>
   <section>
-    <h1>variation-06</h1>
+    <summary>
+      <h1>variation-06 - Melodic Shift 2 Note</h1>
+    </summary>
+    <p>Melodic Shift - Two Note: take the first pitch and move it to the second to last note of the measure</p>
     <div id="variation-06"></div>
   </section>
   <section>
-    <h1>variation-07</h1>
+    <summary>
+      <h1>variation-07 - Melodic Shift 3 Note</h1>
+    </summary>
+    <p>Melodic Shift - Three Note: take the first pitch and move it to the third to last note of the measure</p>
     <div id="variation-07"></div>
   </section>
   <section>
@@ -200,6 +210,40 @@
       return shifted
     }
 
+    const melodicShift = (orig, amountToShift) => {
+      const shifted = orig
+      const origMeasures = orig['score-partwise'].part[0].measure
+
+      const shiftNotesInMeasure = (measure, amountToShift) => {
+        const notes = measure.note
+        pitches = []
+        console.log("notes" , notes)
+        // Saves pitches so we don't overwrite accidently
+        for (let i = 0; i < notes.length; i++)
+        {
+          pitches.push(notes[i].pitch)
+        }
+        // Moves the pitches based on the amount of notes (i.e amountToShift = 1 means shift by 1 note)
+        const setPitches = (notes, amountToShift) => {
+          for (let i = 0; i < notes.length; i++)
+          {
+            console.log("current Pitch", notes[i].pitch)
+            console.log("new pitch", pitches[(i + amountToShift + notes.length) % notes.length])
+            notes[i].pitch = pitches[(i + amountToShift + notes.length) % notes.length]
+          }
+          return notes
+        }
+
+        const changedPitches = setPitches(notes, amountToShift)
+        console.log("changedPtiches", changedPitches)
+        return { ...measure, note: changedPitches }
+      }
+      const shiftedMeasures = origMeasures.map(m => shiftNotesInMeasure(m, amountToShift))
+      shifted['score-partwise'].part[0].measure = shiftedMeasures
+      console.log('shifted', JSON.stringify(shifted))
+      return shifted
+    }
+
     const scores = [
       {
         id: "motive",
@@ -316,6 +360,69 @@
         shift3Embed.ready().then(() => {
           console.log('shift3Embed', shift3Embed)
           shift3Embed.loadJSON(shift3)
+            .then(console.log)
+            .catch(console.error)
+        })
+
+        const shift4 = melodicShift(JSON.parse(origStr.slice()), 1)
+        const shift4Container = document.getElementById('variation-05');
+        const shift4Embed = new Flat.Embed(shift4Container, {
+          "width": "100%",
+          "height": "300",
+          "score": 'blank',
+          "embedParams": {
+            "mode": "edit",
+            "toolsetId": NEA_CREATE_TOOLSET_ID,
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+          },
+        });
+        shift4Embed.ready().then(() => {
+          console.log('shift4Embed', shift4Embed)
+          shift4Embed.loadJSON(shift4)
+            .then(console.log)
+            .catch(console.error)
+        })
+
+        const shift5 = melodicShift(JSON.parse(origStr.slice()), 2)
+        const shift5Container = document.getElementById('variation-06');
+        const shift5Embed = new Flat.Embed(shift5Container, {
+          "width": "100%",
+          "height": "300",
+          "score": 'blank',
+          "embedParams": {
+            "mode": "edit",
+            "toolsetId": NEA_CREATE_TOOLSET_ID,
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+          },
+        });
+        shift5Embed.ready().then(() => {
+          console.log('shift5Embed', shift5Embed)
+          shift5Embed.loadJSON(shift5)
+            .then(console.log)
+            .catch(console.error)
+        })
+
+        const shift6 = melodicShift(JSON.parse(origStr.slice()), 3)
+        const shift6Container = document.getElementById('variation-07');
+        const shift6Embed = new Flat.Embed(shift6Container, {
+          "width": "100%",
+          "height": "300",
+          "score": 'blank',
+          "embedParams": {
+            "mode": "edit",
+            "toolsetId": NEA_CREATE_TOOLSET_ID,
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+          },
+        });
+        shift6Embed.ready().then(() => {
+          console.log('shift6Embed', shift6Embed)
+          shift6Embed.loadJSON(shift6)
             .then(console.log)
             .catch(console.error)
         })
