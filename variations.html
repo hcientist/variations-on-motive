@@ -63,7 +63,7 @@
         <h1>variation-05 - Melodic Shift 1 Note</h1>
       </summary>
       <p>Melodic Shift - One Note: take the first pitch and move it to the last note of the measure</p>
-    <div id="variation-05"></div>
+      <div id="variation-05"></div>
   </section>
   <section>
     <summary>
@@ -80,15 +80,15 @@
     <div id="variation-07"></div>
   </section>
   <section>
-    <h1>variation-08</h1>
+    <h1>variation-08 - Rhythmic and Melodic Shift 1 note</h1>
     <div id="variation-08"></div>
   </section>
   <section>
-    <h1>variation-09</h1>
+    <h1>variation-09 - Rhythmic and Melodic Shift 2 notes</h1>
     <div id="variation-09"></div>
   </section>
   <section>
-    <h1>variation-10</h1>
+    <h1>variation-10 - Rhythmic and Melodic Shift 3 notes</h1>
     <div id="variation-10"></div>
   </section>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
@@ -217,16 +217,14 @@
       const shiftNotesInMeasure = (measure, amountToShift) => {
         const notes = measure.note
         pitches = []
-        console.log("notes" , notes)
+        console.log("notes", notes)
         // Saves pitches so we don't overwrite accidently
-        for (let i = 0; i < notes.length; i++)
-        {
+        for (let i = 0; i < notes.length; i++) {
           pitches.push(notes[i].pitch)
         }
         // Moves the pitches based on the amount of notes (i.e amountToShift = 1 means shift by 1 note)
         const setPitches = (notes, amountToShift) => {
-          for (let i = 0; i < notes.length; i++)
-          {
+          for (let i = 0; i < notes.length; i++) {
             console.log("current Pitch", notes[i].pitch)
             console.log("new pitch", pitches[(i + amountToShift + notes.length) % notes.length])
             notes[i].pitch = pitches[(i + amountToShift + notes.length) % notes.length]
@@ -241,6 +239,96 @@
       const shiftedMeasures = origMeasures.map(m => shiftNotesInMeasure(m, amountToShift))
       shifted['score-partwise'].part[0].measure = shiftedMeasures
       console.log('shifted', JSON.stringify(shifted))
+      return shifted
+    }
+
+    // Successfully coalesces notes when necessary. Needs to be checked with different time signatures
+    // (also more than one measure?)
+    const mwRhythmicShift = (orig, shift) => {
+      let pitchList = [];
+      let shiftedTemplate = orig;
+
+      let numNotes = shiftedTemplate["score-partwise"].part[0].measure[0].note.length;
+      let beats = shiftedTemplate["score-partwise"].part[0].measure[0].attributes[0].time.beats;
+      let subdivision = shiftedTemplate["score-partwise"].part[0].measure[0].attributes[0].divisions;
+      let adjustedShift = Math.ceil(shift / subdivision);
+      let maxNotes = beats * subdivision;
+      pitchList = [...shiftedTemplate["score-partwise"].part[0].measure[0].note];
+      // may also need to use the 'beat' property depending on how much automation flat does
+
+      // the notes that need to be checked for split
+      let checkList = pitchList.splice(numNotes - adjustedShift);
+
+      // increment the 'middle' notes
+      const nonSplitIncrement = (note) => {
+        note['oPos'] = note["$adagio-location"].timePos;
+        note["$adagio-location"].timePos += shift;
+        note['uPos'] = note["$adagio-location"].timePos;
+
+        if (checkList.includes(note)) {
+          note["$adagio-location"].timePos = note.uPos - note.oPos - shift;
+        }
+        else {
+          note["$adagio-location"].timePos %= maxNotes;
+        }
+
+        return note;
+      }
+      pitchList = pitchList.map(n => nonSplitIncrement(n));
+      checkList = checkList.map(n => nonSplitIncrement(n));
+
+      // check the potentially splitting notes, and split if necessary.
+      // coalescing is the 'default' for this version of the algo
+      for (let note of checkList) {
+        let diff = note.uPos - maxNotes;
+
+        if (note.duration > shift || diff < 0) {
+          let splitNote = JSON.parse(JSON.stringify(note));
+
+          splitNote["$adagio-location"].timePos = splitNote.uPos;
+          splitNote.duration -= 1;
+          note.duration -= 1;
+
+          pitchList.push(splitNote);
+        }
+      }
+
+      // concatenate the checked notes list and the 'middle' notes list, then update the template clone
+      pitchList = checkList.concat(pitchList);
+      shiftedTemplate["score-partwise"].part[0].measure[0].note = pitchList;
+
+      return shiftedTemplate;
+    }
+
+    const mwMelodicShift = (orig, shift) => {
+      let pitchList = [];
+
+      // safe cloning handled elsewhere
+      let shiftedTemplate = orig;
+
+      // populate array of pitches (I am pretty sure if you attempt to clone with a prototype method or spread
+      // you get cyclic obj values (perhaps from implicit call to JSON.stringify() ?))
+      for (let measure of orig["score-partwise"].part[0].measure)
+        for (let note of measure.note)
+          pitchList.push(note.pitch);
+
+      // rotate pitches <shift> places by slicing & concatenating
+      pitchList = pitchList.splice(shift).concat(pitchList);
+
+      // remove pitch(es) at the start of the list, update shifted template (same issue as above with protoype methods)
+      for (let measure of shiftedTemplate["score-partwise"].part[0].measure)
+        for (let n of measure.note)
+          n.pitch = pitchList.shift();
+
+      return shiftedTemplate;
+    }
+
+    // perform both shifts
+    const mwRhythmicMelodicShift = (orig, shift) => {
+      let shifted = orig
+
+      shifted = mwMelodicShift(shifted, shift);
+      shifted = mwRhythmicShift(shifted, shift);
       return shifted
     }
 
@@ -301,7 +389,7 @@
             .catch(console.error)
         })
 
-        const shift1 = rhythmicShift(JSON.parse(origStr.slice()), 1)
+        const shift1 = mwRhythmicShift(JSON.parse(origStr.slice()), 1)
         const shift1Container = document.getElementById('variation-02');
         const shift1Embed = new Flat.Embed(shift1Container, {
           "width": "100%",
@@ -322,7 +410,7 @@
             .catch(console.error)
         })
 
-        const shift2 = rhythmicShift(JSON.parse(origStr.slice()), 2)
+        const shift2 = mwRhythmicShift(JSON.parse(origStr.slice()), 2)
         const shift2Container = document.getElementById('variation-03');
         const shift2Embed = new Flat.Embed(shift2Container, {
           "width": "100%",
@@ -343,7 +431,7 @@
             .catch(console.error)
         })
 
-        const shift3 = rhythmicShift(JSON.parse(origStr.slice()), 3)
+        const shift3 = mwRhythmicShift(JSON.parse(origStr.slice()), 3)
         const shift3Container = document.getElementById('variation-04');
         const shift3Embed = new Flat.Embed(shift3Container, {
           "width": "100%",
@@ -364,7 +452,7 @@
             .catch(console.error)
         })
 
-        const shift4 = melodicShift(JSON.parse(origStr.slice()), 1)
+        const shift4 = mwMelodicShift(JSON.parse(origStr.slice()), 1)
         const shift4Container = document.getElementById('variation-05');
         const shift4Embed = new Flat.Embed(shift4Container, {
           "width": "100%",
@@ -385,7 +473,7 @@
             .catch(console.error)
         })
 
-        const shift5 = melodicShift(JSON.parse(origStr.slice()), 2)
+        const shift5 = mwMelodicShift(JSON.parse(origStr.slice()), 2)
         const shift5Container = document.getElementById('variation-06');
         const shift5Embed = new Flat.Embed(shift5Container, {
           "width": "100%",
@@ -406,7 +494,7 @@
             .catch(console.error)
         })
 
-        const shift6 = melodicShift(JSON.parse(origStr.slice()), 3)
+        const shift6 = mwMelodicShift(JSON.parse(origStr.slice()), 3)
         const shift6Container = document.getElementById('variation-07');
         const shift6Embed = new Flat.Embed(shift6Container, {
           "width": "100%",
@@ -423,6 +511,69 @@
         shift6Embed.ready().then(() => {
           console.log('shift6Embed', shift6Embed)
           shift6Embed.loadJSON(shift6)
+            .then(console.log)
+            .catch(console.error)
+        })
+
+        const shift7 = mwRhythmicMelodicShift(JSON.parse(origStr.slice()), 1)
+        const shift7Container = document.getElementById('variation-08');
+        const shift7Embed = new Flat.Embed(shift7Container, {
+          "width": "100%",
+          "height": "300",
+          "score": 'blank',
+          "embedParams": {
+            "mode": "edit",
+            "toolsetId": NEA_CREATE_TOOLSET_ID,
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+          },
+        });
+        shift7Embed.ready().then(() => {
+          // console.log('shift7Embed', shift7Embed)
+          shift7Embed.loadJSON(shift7)
+            .then(console.log)
+            .catch(console.error)
+        })
+
+        const shift8 = mwRhythmicMelodicShift(JSON.parse(origStr.slice()), 2)
+        const shift8Container = document.getElementById('variation-09');
+        const shift8Embed = new Flat.Embed(shift8Container, {
+          "width": "100%",
+          "height": "300",
+          "score": 'blank',
+          "embedParams": {
+            "mode": "edit",
+            "toolsetId": NEA_CREATE_TOOLSET_ID,
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+          },
+        });
+        shift8Embed.ready().then(() => {
+          // console.log('shift8Embed', shift8Embed)
+          shift8Embed.loadJSON(shift8)
+            .then(console.log)
+            .catch(console.error)
+        })
+
+        const shift9 = mwRhythmicMelodicShift(JSON.parse(origStr.slice()), 3)
+        const shift9Container = document.getElementById('variation-10');
+        const shift9Embed = new Flat.Embed(shift9Container, {
+          "width": "100%",
+          "height": "300",
+          "score": 'blank',
+          "embedParams": {
+            "mode": "edit",
+            "toolsetId": NEA_CREATE_TOOLSET_ID,
+            "branding": false,
+            "controlsPlay": false,
+            "appId": appId,
+          },
+        });
+        shift9Embed.ready().then(() => {
+          // console.log('shift9Embed', shift9Embed)
+          shift9Embed.loadJSON(shift9)
             .then(console.log)
             .catch(console.error)
         })
