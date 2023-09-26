@@ -259,12 +259,13 @@
       // the notes that need to be checked for split
       let checkList = pitchList.splice(numNotes - adjustedShift);
 
-      // increment the 'middle' notes
+      // increment the notes' timepos with <shift> + new propertes to aid with coalesce
       const nonSplitIncrement = (note) => {
         note['oPos'] = note["$adagio-location"].timePos;
         note["$adagio-location"].timePos += shift;
         note['uPos'] = note["$adagio-location"].timePos;
 
+        // different increments for potential splits
         if (checkList.includes(note)) {
           note["$adagio-location"].timePos = note.uPos - note.oPos - shift;
         }
