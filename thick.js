@@ -328,11 +328,9 @@ const bucketToString = (bucket) => {
   return bucket
     .map((note) => {
       if (note.alter) {
-        if (note.alter == -1) {
-          alter = `♭`;
-        } else if (note.alter == 1) {
-          alter = "♯";
-        }
+        alter = (note.alter == -1) ? `♭` : "♯";
+      } else {
+        alter = "";
       }
       return note.step + alter + note.octave;
     })
