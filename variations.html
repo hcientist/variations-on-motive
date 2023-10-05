@@ -121,6 +121,13 @@
           result.duration = note.duration
           result.pitch = note.pitch
           result.type = note.type
+          let beamContent = 'end'
+          if (note.beam){
+            if (note.beam.content === 'end'){
+              beamContent = 'begin';
+            }
+            result.beam = {...note.beam, content: beamContent}
+          }
           return result
         })
         const reversedNotes = simplifiedNotes.reverse()
