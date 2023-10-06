@@ -157,9 +157,9 @@ const chromaticScale = [
       step: "B",
     },
     flat: {
-      repr: "B",
-      alter: "",
-      step: "B",
+      repr: "Cb",
+      alter: "-1",
+      step: "C",
     },
   },
 ];
@@ -182,8 +182,10 @@ const noteToScaleIdx = {
   "A#": 10,
   Bb: 10,
   B: 11,
+  Cb: 11,
 };
 
+// 'tonic', 'subdominant', or 'domininat', and a key like 'C' or 'Eb'
 function getChordScaleInKey(chordScale, key) {
   let alter = "sharp";
   if (key.includes("b") || key === "F") {
