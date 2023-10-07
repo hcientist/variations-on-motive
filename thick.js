@@ -186,7 +186,8 @@ const noteToScaleIdx = {
 };
 
 // 'tonic', 'subdominant', or 'domininat', and a key like 'C' or 'Eb'
-function getChordScaleInKey(chordScale, key) {
+function getChordScaleInKey(chordScale, keyObj) {
+  const key = keyObj.repr;
   let alter = "sharp";
   if (key.includes("b") || key === "F") {
     alter = "flat";
@@ -224,12 +225,12 @@ function getChordScaleInKey(chordScale, key) {
 
   const firstPitchIdx = noteToScaleIdx[key];
   const firstPitchObj = chromaticScale[firstPitchIdx];
-  let octave = 4;
+  let octave = keyObj.minOctave;
   const mapped = chordScaleIntervals[chordScale].map((interval) => {
     if (
       Math.floor((firstPitchIdx + interval.offset) / chromaticScale.length) > 0
     ) {
-      octave = 5;
+      octave = keyObj.minOctave+1;
     }
 
     const result =
@@ -239,7 +240,6 @@ function getChordScaleInKey(chordScale, key) {
     result.octave = "" + octave;
     return result;
   });
-  console.log(`chord scale buckets for ${chordScale} in key ${key}`, mapped);
   return mapped;
 }
 
@@ -256,8 +256,14 @@ const negatives = {
 const CIRCLE_OF_FIFTHS = Object.assign({}, nonNegative, negatives);
 
 const keyFromScoreJSON = (pieceScoreJSON) => {
-  // console.log(CIRCLE_OF_FIFTHS);
-  // console.log('problem here geting key', pieceScoreJSON, pieceScoreJSON?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.[0]?.key?.fifths)
+
+  const minOctave = pieceScoreJSON["score-partwise"]["part"][0].measure.reduce((ac, measure)=>measure.note.reduce((acc, note) => {
+    const thisOctave = parseInt(note.pitch.octave, 10);
+    if (thisOctave < acc) {
+      return thisOctave;
+    }
+    return acc;
+  },10), 10); //TODO: what if octave can be higher than 10?
   const keySignature = {
     repr: CIRCLE_OF_FIFTHS[
       pieceScoreJSON["score-partwise"]["part"][0]["measure"][0][
@@ -268,8 +274,10 @@ const keyFromScoreJSON = (pieceScoreJSON) => {
       pieceScoreJSON["score-partwise"]["part"][0]["measure"][0][
         "attributes"
       ][0]["key"],
+    clef: pieceScoreJSON["score-partwise"]["part"][0]["measure"][0]
+      .attributes[0].clef,
+    minOctave,
   };
-  // console.log('pieceScoreJSON["score-partwise"]["part"][0]["measure"][0]', pieceScoreJSON["score-partwise"]["part"][0]["measure"][0])
   return keySignature;
 };
 
@@ -287,6 +295,7 @@ const embedTransposed = (
   scorePart["part-name"] = instrName; //embed.instrumentName;
   scorePart["part-abbreviation"] = instrName; //embed.instrumentAbbreviation;
   scorePart["score-instrument"]["instrument-name"] = instrName; //embed.instrumentName;
+  console.log('bucket', bucket) //FIXME????
   template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.note?.forEach(
     (note, i) => {
       note.pitch.step = bucket[i].step;
@@ -296,6 +305,7 @@ const embedTransposed = (
       } else if (note.pitch.alter) {
         delete note.pitch.alter;
       }
+      console.log('note.pitch', note.pitch)
     }
   );
 
@@ -304,6 +314,9 @@ const embedTransposed = (
     (element) => {
       if (element.key) {
         element.key.fifths = keySig.keyAsJSON.fifths;
+      }
+      if (element.clef) {
+        element.clef = keySig.clef;
       }
     }
   );
@@ -356,20 +369,20 @@ const refToChordScaleBuckets = (
     })
     .then((pieceScoreJSON) => {
       const keySignature = keyFromScoreJSON(pieceScoreJSON); //this is a cheat code: i check the metadata of THIS STUDENT (already accounting for their instrument and the piece's composition key) as a letter like F
-      const tonicBucket = getChordScaleInKey("tonic", keySignature.repr);
+      const tonicBucket = getChordScaleInKey("tonic", keySignature);
       scaleDegreeElems.tonic.innerHTML = `<output>${bucketToString(
         tonicBucket
       )}</output`;
 
       const subdominantBucket = getChordScaleInKey(
         "subdominant",
-        keySignature.repr
+        keySignature
       );
       scaleDegreeElems.subdominant.innerHTML = `<output>${bucketToString(
         subdominantBucket
       )}</output`;
 
-      const dominantBucket = getChordScaleInKey("dominant", keySignature.repr);
+      const dominantBucket = getChordScaleInKey("dominant", keySignature);
       scaleDegreeElems.dominant.innerHTML = `<output>${bucketToString(
         dominantBucket
       )}</output`;
@@ -385,7 +398,6 @@ const refToChordScaleBuckets = (
       return fetch("tonic-eb-as-minimized.json")
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
           return data;
         })
         .then((data) => {
@@ -448,7 +460,6 @@ const pitchesToRests = (pieceScoreJSON) => {
     }
     return current;
   };
-  console.log("pieceScoreJSON", pieceScoreJSON);
   const composeScoreJSON = pieceScoreJSON;
   // nathan!
   let duration = 8; //default to 8 becasue i reasoned it might be a quarter in some cases
