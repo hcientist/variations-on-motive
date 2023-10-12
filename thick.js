@@ -312,10 +312,10 @@ const embedTransposed = (
   // change the key signature in the score from whatever it is in tonic and eb to what we're given
   template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.forEach(
     (element) => {
-      if (element.key) {
+      if (element.key) { //FIXME
         element.key.fifths = keySig.keyAsJSON.fifths;
       }
-      if (element.clef) {
+      if (element.clef) { //FIXME
         element.clef = keySig.clef;
       }
     }
@@ -496,18 +496,8 @@ const pitchesToRests = (pieceScoreJSON) => {
         "$adagio-location": {
           timePos: j * duration,
         },
-        // '$color': bucketColors[j%bucketColors.length],
       };
     });
-
-    // measure.note.forEach((note) => {
-    //   note.rest = {}
-    //   note.pitch = undefined
-    //   note.beam = undefined;
-    //   note.dot = undefined;
-    //   note.tie = undefined;
-    //   note.notations = undefined;
-    // })
   });
   console.log("composeScoreJSON", composeScoreJSON);
   return composeScoreJSON;
