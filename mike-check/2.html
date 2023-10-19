@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://fav.farm/🎙️" >
+  <title>Mike checks mic check 🎤✅</title>
+</head>
+
+<body>
+  <h1>Mike Checks Mic Check</h1>
+  <section>
+    <h2>❌echoCancellation ✅noiseSuppression</h2>
+    <button type="button" id="start">Start Recording ⏺️</button>
+    <button type="button" id="stop">Stop Recording 🛑</button>
+    
+    <section id="sound-clips"></section>
+  </section>
+  <nav>
+    <ol>
+      <li><a href="1.html">Default (with both ✅echoCancellation and ✅noiseSuppression)</a></li>
+      <li><a href="2.html">❌echoCancellation ✅noiseSuppression</a></li>
+      <li><a href="3.html">✅echoCancellation ❌noiseSuppression</a></li>
+      <li><a href="4.html">❌echoCancellation ❌noiseSuppression</a></li>
+    </ol>
+  </nav>
+  <!-- <section>
+    <h2>✅echoCancellation ❌noiseSuppression</h2>
+    <button type="button" id="start">Start Recording ⏺️</button>
+    <button type="button" id="stop">Stop Recording 🛑</button>
+    
+    <section id="sound-clips"></section>
+  </section>
+  <section>
+    <h2>Without echoCancellation</h2>
+    <button type="button" id="start">Start Recording ⏺️</button>
+    <button type="button" id="stop">Stop Recording 🛑</button>
+    
+    <section id="sound-clips"></section>
+  </section> -->
+  <!-- <script src="https://unpkg.com/mic-recorder-to-mp3@2.2.1/dist/index.min.js"></script> -->
+  <script>
+    let stream = null;
+    let mediaRecorder = null;
+    let chunks = [];
+
+
+
+    // let recorder = new MicRecorder();
+    
+    const startBtn = document.getElementById('start');
+    const stopBtn = document.getElementById('stop');
+    const soundClips = document.getElementById('sound-clips');
+
+    startBtn.addEventListener('click', record);
+    stopBtn.addEventListener('click', stop);
+
+    async function record() {
+      console.log('record');
+
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio:{
+            echoCancellation: false,
+            // noiseSuppression: true,
+            // sampleRate: 44100,
+            // channelCount: 2,
+            // volume: 1.0,
+            // sampleSize: 16,
+            // latency: 0
+          }
+        });
+        /* use the stream */
+        // https://developer.mozilla.org/en-US/docs/Web/API/MediaStream_Recording_API/Using_the_MediaStream_Recording_API#capturing_the_media_stream
+        mediaRecorder = new MediaRecorder(stream);
+        mediaRecorder.ondataavailable = (e) => {
+          chunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = (e) => {
+          console.log("mediaRecorder stopped");
+
+          const clipName = prompt("Enter a name for your sound clip");
+
+          const clipContainer = document.createElement("article");
+          const clipLabel = document.createElement("p");
+          const audio = document.createElement("audio");
+          const deleteButton = document.createElement("button");
+
+          clipContainer.classList.add("clip");
+          audio.setAttribute("controls", "");
+          deleteButton.innerHTML = "Delete";
+          clipLabel.innerHTML = clipName;
+
+          clipContainer.appendChild(audio);
+          clipContainer.appendChild(clipLabel);
+          clipContainer.appendChild(deleteButton);
+          soundClips.appendChild(clipContainer);
+
+          const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
+          chunks = [];
+          const audioURL = window.URL.createObjectURL(blob);
+          audio.src = audioURL;
+
+          deleteButton.onclick = (e) => {
+            let evtTgt = e.target;
+            evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
+          };
+        };
+
+        mediaRecorder.start()
+        console.log(mediaRecorder.state);
+        console.log("recorder started");
+        startBtn.style.background = "red";
+        startBtn.style.color = "black";
+        
+        // audio.srcObject = stream;
+        // audio.onloadedmetadata = function(e) {
+        //   // audio.play();
+        //   console.log('loaded metadata')
+        // };
+
+      } catch (err) {
+        console.error(err);
+        /* handle the error */
+      }
+    }
+
+    async function stop() {
+      console.log('stop recording')
+      // stream.getTracks().forEach(function(track) {
+      //   track.stop();
+      // });
+
+      mediaRecorder.stop();
+      console.log(mediaRecorder.state);
+      console.log("recorder stopped");
+      startBtn.style.background = "";
+      startBtn.style.color = "";
+
+    }
+  </script>
+</body>
+
+</html>
