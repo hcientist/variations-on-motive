@@ -230,7 +230,7 @@ function getChordScaleInKey(chordScale, keyObj) {
     if (
       Math.floor((firstPitchIdx + interval.offset) / chromaticScale.length) > 0
     ) {
-      octave = keyObj.minOctave+1;
+      octave = keyObj.minOctave + 1;
     }
 
     const result =
@@ -256,14 +256,17 @@ const negatives = {
 const CIRCLE_OF_FIFTHS = Object.assign({}, nonNegative, negatives);
 
 const keyFromScoreJSON = (pieceScoreJSON) => {
-
-  const minOctave = pieceScoreJSON["score-partwise"]["part"][0].measure.reduce((ac, measure)=>measure.note.reduce((acc, note) => {
-    const thisOctave = parseInt(note.pitch.octave, 10);
-    if (thisOctave < acc) {
-      return thisOctave;
-    }
-    return acc;
-  },10), 10); //TODO: what if octave can be higher than 10?
+  const minOctave = pieceScoreJSON["score-partwise"]["part"][0].measure.reduce(
+    (ac, measure) =>
+      measure.note.reduce((acc, note) => {
+        const thisOctave = parseInt(note.pitch.octave, 10);
+        if (thisOctave < acc) {
+          return thisOctave;
+        }
+        return acc;
+      }, 10),
+    10
+  ); //TODO: what if octave can be higher than 10?
   const keySignature = {
     repr: CIRCLE_OF_FIFTHS[
       pieceScoreJSON["score-partwise"]["part"][0]["measure"][0][
@@ -284,38 +287,67 @@ const keyFromScoreJSON = (pieceScoreJSON) => {
 const embedTransposed = (
   bucket,
   embed,
-  template,
+  templt,
   keySig,
   instrName,
   octaveShift
 ) => {
+  const template = JSON.parse(JSON.stringify(templt));
+  // const template = templt
   // change the notes in the score from whatever they are in tonic and eb to what we're given
   const scorePart =
     template?.["score-partwise"]?.["part-list"]?.["score-part"]?.[0];
   scorePart["part-name"] = instrName; //embed.instrumentName;
   scorePart["part-abbreviation"] = instrName; //embed.instrumentAbbreviation;
   scorePart["score-instrument"]["instrument-name"] = instrName; //embed.instrumentName;
-  console.log('bucket', bucket) //FIXME????
-  template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.note?.forEach(
-    (note, i) => {
-      note.pitch.step = bucket[i].step;
-      note.pitch.octave = bucket[i].octave;
-      if (bucket[i].alter) {
-        note.pitch.alter = bucket[i].alter;
-      } else if (note.pitch.alter) {
-        delete note.pitch.alter;
+  console.log("bucket", bucket); //FIXME????
+
+  // // change the notes from tonic eb to whatever
+  // template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.note?.forEach(
+  //   (note, i) => {
+  //     note.pitch.step = bucket[i].step;
+  //     note.pitch.octave = bucket[i].octave;
+  //     if (bucket[i].alter) {
+  //       note.pitch.alter = bucket[i].alter;
+  //     } else if (note.pitch.alter) {
+  //       delete note.pitch.alter;
+  //     }
+  //     console.log('note.pitch', note.pitch)
+  //   }
+  // );
+
+  // start from bucket, create the notes, add them to measure
+  template["score-partwise"].part[0].measure[0].note = bucket.map(
+    ({ alter, octave, step }) => {
+      // console.log('\n\n\n\nmake note')
+      // console.log('alter, octave, step' );
+      // console.log(alter, octave, step );
+      // const  = noteInfo
+      const note = {
+        staff: "1",
+        voice: "1",
+        duration: "1",
+        pitch: { octave, step },
+        type: "quarter",
+      };
+      if (alter !== ''){
+        note.pitch.alter = alter
       }
-      console.log('note.pitch', note.pitch)
+      return note
     }
   );
+  console.log('\n\n\n\n\ntemplate["score-partwise"].part[0].measure[0].note');
+  console.log(template["score-partwise"].part[0].measure[0].note);
 
   // change the key signature in the score from whatever it is in tonic and eb to what we're given
   template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.forEach(
     (element) => {
-      if (element.key) { //FIXME
+      if (element.key) {
+        //FIXME
         element.key.fifths = keySig.keyAsJSON.fifths;
       }
-      if (element.clef) { //FIXME
+      if (element.clef) {
+        //FIXME
         element.clef = keySig.clef;
       }
     }
@@ -343,7 +375,7 @@ const bucketToString = (bucket) => {
   return bucket
     .map((note) => {
       if (note.alter) {
-        alter = (note.alter == -1) ? `♭` : "♯";
+        alter = note.alter == -1 ? `♭` : "♯";
       } else {
         alter = "";
       }
@@ -368,16 +400,14 @@ const refToChordScaleBuckets = (
       return refEmbed.getJSON();
     })
     .then((pieceScoreJSON) => {
+      console.log("refEmbed", pieceScoreJSON);
       const keySignature = keyFromScoreJSON(pieceScoreJSON); //this is a cheat code: i check the metadata of THIS STUDENT (already accounting for their instrument and the piece's composition key) as a letter like F
       const tonicBucket = getChordScaleInKey("tonic", keySignature);
       scaleDegreeElems.tonic.innerHTML = `<output>${bucketToString(
         tonicBucket
       )}</output`;
 
-      const subdominantBucket = getChordScaleInKey(
-        "subdominant",
-        keySignature
-      );
+      const subdominantBucket = getChordScaleInKey("subdominant", keySignature);
       scaleDegreeElems.subdominant.innerHTML = `<output>${bucketToString(
         subdominantBucket
       )}</output`;

@@ -3,7 +3,7 @@
     "part-list": {
       "score-part": [
         {
-          "part-name": "Concert Pitch TC 8va",
+          "part-name": "",
           "voiceMapping": { "0": [0] },
           "staffMapping": [
             {
@@ -18,9 +18,9 @@
           "voiceUuidToIdxMapping": {
             "voiceUuid": 0
           },
-          "part-abbreviation": "Concert Pitch TC 8va",
+          "part-abbreviation": "",
           "score-instrument": {
-            "instrument-name": "Concert Pitch TC 8va",
+            "instrument-name": "",
             "$id": "P1-I1"
           },
 
@@ -33,43 +33,7 @@
       {
         "measure": [
           {
-            "note": [
-              {
-                "staff": "1",
-                "voice": "1",
-                "duration": "1",
-                "pitch": { "octave": "4", "step": "E", "alter": "-1" },
-                "type": "quarter"
-              },
-              {
-                "staff": "1",
-                "voice": "1",
-                "duration": "1",
-                "pitch": { "octave": "4", "step": "F" },
-                "type": "quarter"
-              },
-              {
-                "staff": "1",
-                "voice": "1",
-                "duration": "1",
-                "pitch": { "octave": "4", "step": "G" },
-                "type": "quarter"
-              },
-              {
-                "staff": "1",
-                "voice": "1",
-                "duration": "1",
-                "pitch": { "octave": "4", "step": "B", "alter": "-1" },
-                "type": "quarter"
-              },
-              {
-                "staff": "1",
-                "voice": "1",
-                "duration": "1",
-                "pitch": { "octave": "4", "step": "C" },
-                "type": "quarter"
-              }
-            ],
+            "note": [],
             "$number": "1",
             "barline": {
               "bar-style": "light-heavy",
