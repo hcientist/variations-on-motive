@@ -19,181 +19,26 @@ const chordScaleBucketsInEb = {
   },
 };
 
-const chromaticScale = [
-  {
-    sharp: {
-      step: "C",
-      alter: "",
-    },
-    flat: {
-      step: "C",
-      alter: "",
-    },
-  },
-  {
-    sharp: {
-      repr: "C#",
-      alter: "1",
-      step: "C",
-    },
-    flat: {
-      repr: "Db",
-      alter: "-1",
-      step: "D",
-    },
-  },
-  {
-    sharp: {
-      repr: "D",
-      alter: "",
-      step: "D",
-    },
-    flat: {
-      repr: "D",
-      alter: "",
-      step: "D",
-    },
-  },
-  {
-    sharp: {
-      repr: "D#",
-      alter: "1",
-      step: "D",
-    },
-    flat: {
-      repr: "Eb",
-      alter: "-1",
-      step: "E",
-    },
-  },
-  {
-    sharp: {
-      repr: "E",
-      alter: "",
-      step: "E",
-    },
-    flat: {
-      repr: "E",
-      alter: "",
-      step: "E",
-    },
-  },
-  {
-    sharp: {
-      repr: "F",
-      alter: "",
-      step: "F",
-    },
-    flat: {
-      repr: "F",
-      alter: "",
-      step: "F",
-    },
-  },
-  {
-    sharp: {
-      repr: "F#",
-      alter: "1",
-      step: "F",
-    },
-    flat: {
-      repr: "Gb",
-      alter: "-1",
-      step: "G",
-    },
-  },
-  {
-    sharp: {
-      repr: "G",
-      alter: "",
-      step: "G",
-    },
-    flat: {
-      repr: "G",
-      alter: "",
-      step: "G",
-    },
-  },
-  {
-    sharp: {
-      repr: "G#",
-      alter: "1",
-      step: "G",
-    },
-    flat: {
-      repr: "Ab",
-      alter: "-1",
-      step: "A",
-    },
-  },
-  {
-    sharp: {
-      repr: "A",
-      alter: "",
-      step: "A",
-    },
-    flat: {
-      repr: "A",
-      alter: "",
-      step: "A",
-    },
-  },
-  {
-    sharp: {
-      repr: "A#",
-      alter: "1",
-      step: "A",
-    },
-    flat: {
-      repr: "Bb",
-      alter: "-1",
-      step: "B",
-    },
-  },
-  {
-    sharp: {
-      repr: "B",
-      alter: "",
-      step: "B",
-    },
-    flat: {
-      repr: "Cb",
-      alter: "-1",
-      step: "C",
-    },
-  },
-];
 
-const noteToScaleIdx = {
-  C: 0,
-  "C#": 1,
-  Db: 1,
-  D: 2,
-  "D#": 3,
-  Eb: 3,
-  E: 4,
-  F: 5,
-  "F#": 6,
-  Gb: 6,
-  G: 7,
-  "G#": 8,
-  Ab: 8,
-  A: 9,
-  "A#": 10,
-  Bb: 10,
-  B: 11,
-  Cb: 11,
-};
 
-// 'tonic', 'subdominant', or 'domininat', and a key like 'C' or 'Eb'
+
+
+// chordScale is: 'tonic', 'subdominant', or 'domininat', 
+// and a keyObj.repr: like 'C' or 'Eb'
+// keyObj is like: {
+//   "repr": "Bb",
+//   "keyAsJSON": {
+//     "fifths": "-2"
+//   },
+//   "clef": {
+//     "sign": "C",
+//     "line": "3"
+//   },
+//   "minOctave": 3
+// }
 function getChordScaleInKey(chordScale, keyObj) {
-  const key = keyObj.repr;
-  let alter = "sharp";
-  if (key.includes("b") || key === "F") {
-    alter = "flat";
-  }
-
-  const tonicBucketIntervals = [
+  
+  const tonicBucketIntervals = [ // musical facts.
     { name: "1", offset: 0 }, // Unison
     { name: "2", offset: 2 }, // Major 2nd
     { name: "3", offset: 4 }, // Major 3rd
@@ -223,18 +68,191 @@ function getChordScaleInKey(chordScale, keyObj) {
     dominant: dominantBucketIntervals,
   };
 
+  const noteToScaleIdx = {
+    C: 0,
+    "C#": 1,
+    Db: 1,
+    D: 2,
+    "D#": 3,
+    Eb: 3,
+    E: 4,
+    F: 5,
+    "F#": 6,
+    Gb: 6,
+    G: 7,
+    "G#": 8,
+    Ab: 8,
+    A: 9,
+    "A#": 10,
+    Bb: 10,
+    B: 11,
+    Cb: 11,
+  };
+  
+  const chromaticScale = [
+    {
+      sharp: {
+        step: "C",
+        alter: "",
+      },
+      flat: {
+        step: "C",
+        alter: "",
+      },
+    },
+    {
+      sharp: {
+        repr: "C#",
+        alter: "1",
+        step: "C",
+      },
+      flat: {
+        repr: "Db",
+        alter: "-1",
+        step: "D",
+      },
+    },
+    {
+      sharp: {
+        repr: "D",
+        alter: "",
+        step: "D",
+      },
+      flat: {
+        repr: "D",
+        alter: "",
+        step: "D",
+      },
+    },
+    {
+      sharp: {
+        repr: "D#",
+        alter: "1",
+        step: "D",
+      },
+      flat: {
+        repr: "Eb",
+        alter: "-1",
+        step: "E",
+      },
+    },
+    {
+      sharp: {
+        repr: "E",
+        alter: "",
+        step: "E",
+      },
+      flat: {
+        repr: "E",
+        alter: "",
+        step: "E",
+      },
+    },
+    {
+      sharp: {
+        repr: "F",
+        alter: "",
+        step: "F",
+      },
+      flat: {
+        repr: "F",
+        alter: "",
+        step: "F",
+      },
+    },
+    {
+      sharp: {
+        repr: "F#",
+        alter: "1",
+        step: "F",
+      },
+      flat: {
+        repr: "Gb",
+        alter: "-1",
+        step: "G",
+      },
+    },
+    {
+      sharp: {
+        repr: "G",
+        alter: "",
+        step: "G",
+      },
+      flat: {
+        repr: "G",
+        alter: "",
+        step: "G",
+      },
+    },
+    {
+      sharp: {
+        repr: "G#",
+        alter: "1",
+        step: "G",
+      },
+      flat: {
+        repr: "Ab",
+        alter: "-1",
+        step: "A",
+      },
+    },
+    {
+      sharp: {
+        repr: "A",
+        alter: "",
+        step: "A",
+      },
+      flat: {
+        repr: "A",
+        alter: "",
+        step: "A",
+      },
+    },
+    {
+      sharp: {
+        repr: "A#",
+        alter: "1",
+        step: "A",
+      },
+      flat: {
+        repr: "Bb",
+        alter: "-1",
+        step: "B",
+      },
+    },
+    {
+      sharp: {
+        repr: "B",
+        alter: "",
+        step: "B",
+      },
+      flat: {
+        repr: "Cb",
+        alter: "-1",
+        step: "C",
+      },
+    },
+  ];
+
+  const key = keyObj.repr;
+  let alter = "sharp";
+  if (key.includes("b") || key === "F") { // musician said so (that F is also flat, and that all else are sharp)
+    alter = "flat";
+  }
   const firstPitchIdx = noteToScaleIdx[key];
   const firstPitchObj = chromaticScale[firstPitchIdx];
   let octave = keyObj.minOctave;
+  
+  // start from the pitch that represents the key of the score and find the 5 pitches with the corresponsing relationship from the chordScaleIntervals
   const mapped = chordScaleIntervals[chordScale].map((interval) => {
-    if (
+    if ( // if we reach the end of the array, go back to the front (circular array essentially) and increment octave
       Math.floor((firstPitchIdx + interval.offset) / chromaticScale.length) > 0
-    ) {
+      ) {
       octave = keyObj.minOctave + 1;
     }
 
     const result =
-      chromaticScale[(firstPitchIdx + interval.offset) % chromaticScale.length][
+    chromaticScale[(firstPitchIdx + interval.offset) % chromaticScale.length][
         alter
       ];
     result.octave = "" + octave;
@@ -243,30 +261,38 @@ function getChordScaleInKey(chordScale, keyObj) {
   return mapped;
 }
 
-const nonNegative = ["C", "G", "D", "A", "E", "B", "F#", "C#"];
-const negatives = {
-  "-1": "F",
-  "-2": "Bb",
-  "-3": "Eb",
-  "-4": "Ab",
-  "-5": "Db",
-  "-6": "Gb",
-  "-7": "Cb",
-};
-const CIRCLE_OF_FIFTHS = Object.assign({}, nonNegative, negatives);
 
-const keyFromScoreJSON = (pieceScoreJSON) => {
-  const minOctave = pieceScoreJSON["score-partwise"]["part"][0].measure.reduce(
-    (ac, measure) =>
-      measure.note.reduce((acc, note) => {
+function keyFromScoreJSON (pieceScoreJSON) {
+
+  const nonNegative = ["C", "G", "D", "A", "E", "B", "F#", "C#"]; // moved from global scope.
+  const negatives = {
+    "-1": "F",
+    "-2": "Bb",
+    "-3": "Eb",
+    "-4": "Ab",
+    "-5": "Db",
+    "-6": "Gb",
+    "-7": "Cb",
+  };
+  const CIRCLE_OF_FIFTHS = Object.assign({}, nonNegative, negatives);
+
+  const minOctave = pieceScoreJSON["score-partwise"]["part"][0].measure.reduce( // Gets the min octave within all the measures.
+    (measureMinOctave, measure) => {
+      const minForMeasure = measure.note.reduce((noteMinOctave, note) => { // Gets the min octave within a measure.
         const thisOctave = parseInt(note.pitch.octave, 10);
-        if (thisOctave < acc) {
+        if (thisOctave < noteMinOctave) {
           return thisOctave;
         }
-        return acc;
-      }, 10),
-    10
+        return noteMinOctave;
+      }, 100)
+
+      if (minForMeasure < measureMinOctave) {
+        return minForMeasure
+      }
+      return measureMinOctave
+    }, 100
   ); //TODO: what if octave can be higher than 10?
+  
   const keySignature = {
     repr: CIRCLE_OF_FIFTHS[
       pieceScoreJSON["score-partwise"]["part"][0]["measure"][0][
@@ -300,7 +326,7 @@ const embedTransposed = (
   scorePart["part-name"] = instrName; //embed.instrumentName;
   scorePart["part-abbreviation"] = instrName; //embed.instrumentAbbreviation;
   scorePart["score-instrument"]["instrument-name"] = instrName; //embed.instrumentName;
-  console.log("bucket", bucket); //FIXME????
+  // console.log("bucket", bucket); //FIXME????
 
   // // change the notes from tonic eb to whatever
   // template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.note?.forEach(
@@ -336,8 +362,8 @@ const embedTransposed = (
       return note
     }
   );
-  console.log('\n\n\n\n\ntemplate["score-partwise"].part[0].measure[0].note');
-  console.log(template["score-partwise"].part[0].measure[0].note);
+  // console.log('\n\n\n\n\ntemplate["score-partwise"].part[0].measure[0].note');
+  // console.log(template["score-partwise"].part[0].measure[0].note);
 
   // change the key signature in the score from whatever it is in tonic and eb to what we're given
   template?.["score-partwise"]?.part?.[0]?.measure?.[0]?.attributes?.forEach(
@@ -384,87 +410,126 @@ const bucketToString = (bucket) => {
     .join(" ");
 };
 
-//once the student's reference score is loaded (drBbEmbed), check its key signature and then get the corresponding chord scale buckets?
-const refToChordScaleBuckets = (
-  refEmbed,
-  tonicEmbed,
-  subdominantEmbed,
+// 
+async function refToChordScaleBuckets(refEmbed, //this is the Flat embed object (from the Flat constructor) for the melody score for some song that has already been determined to be for the current student
+  tonicEmbed, // this is a reference to the Flat object (result of a Flat constructor call) which already knows about its corresponding DOM element
+  subdominantEmbed, 
   dominantEmbed,
-  scaleDegreeElems,
-  instrName,
-  octaveShift = 0
-) => {
-  return refEmbed
-    .ready()
-    .then(() => {
-      return refEmbed.getJSON();
-    })
-    .then((pieceScoreJSON) => {
-      console.log("refEmbed", pieceScoreJSON);
-      const keySignature = keyFromScoreJSON(pieceScoreJSON); //this is a cheat code: i check the metadata of THIS STUDENT (already accounting for their instrument and the piece's composition key) as a letter like F
-      const tonicBucket = getChordScaleInKey("tonic", keySignature);
-      scaleDegreeElems.tonic.innerHTML = `<output>${bucketToString(
-        tonicBucket
-      )}</output`;
+  scaleDegreeElems, // this is a reference to a collection of DOM elements into which the function should put the text version of the pitches that it will ask flat io to plot for each chord scale
+  instrName, // this is a reference to a given instrumen name
+  octaveShift = 0) { // supposed to be for the 8va or 8vb thing (where like piccolo actually needs a higher octave even though the notes are down on the staff)
 
-      const subdominantBucket = getChordScaleInKey("subdominant", keySignature);
-      scaleDegreeElems.subdominant.innerHTML = `<output>${bucketToString(
-        subdominantBucket
-      )}</output`;
+    await refEmbed.ready() 
+    const pieceScoreJSON = await refEmbed.getJSON(); //from the reference song already in the correct transposition, but containing the notes of the melody rather than the chord scale bucket notes
 
-      const dominantBucket = getChordScaleInKey("dominant", keySignature);
-      scaleDegreeElems.dominant.innerHTML = `<output>${bucketToString(
-        dominantBucket
-      )}</output`;
-      console.log(
-        "tonicBucket",
-        tonicBucket,
-        "subdominantBucket",
-        subdominantBucket,
-        "dominantBucket",
-        dominantBucket
-      );
+    // console.log("refEmbed", pieceScoreJSON);
+    const keySignature = keyFromScoreJSON(pieceScoreJSON); //this is a cheat code: i check the metadata of THIS STUDENT (already accounting for their instrument and the piece's composition key) as a letter like F, Bb, etc.
+    
+    const tonicBucket = getChordScaleInKey("tonic", keySignature); // get the 5 pitches that are in the tonic chord scale bucket for a score with the given key signature 
+    scaleDegreeElems.tonic.innerHTML = `<output>${bucketToString(
+      tonicBucket
+    )}</output`;
 
-      return fetch("tonic-eb-as-minimized.json")
-        .then((response) => response.json())
-        .then((data) => {
-          return data;
-        })
-        .then((data) => {
-          return embedTransposed(
-            tonicBucket,
-            tonicEmbed,
-            data,
-            keySignature,
-            instrName,
-            octaveShift
-          )
-            .then(() => {
-              return embedTransposed(
-                subdominantBucket,
-                subdominantEmbed,
-                data,
-                keySignature,
-                instrName,
-                octaveShift
-              );
-            })
-            .then(() => {
-              return embedTransposed(
-                dominantBucket,
-                dominantEmbed,
-                data,
-                keySignature,
-                instrName,
-                octaveShift
-              );
-            });
-        });
-    })
-    .catch((err) => {
-      console.error("err in preparing refEmbed", err);
-    });
-};
+    const subdominantBucket = getChordScaleInKey("subdominant", keySignature);
+    scaleDegreeElems.subdominant.innerHTML = `<output>${bucketToString(
+      subdominantBucket
+    )}</output`;
+
+    const dominantBucket = getChordScaleInKey("dominant", keySignature);
+    scaleDegreeElems.dominant.innerHTML = `<output>${bucketToString(
+      dominantBucket
+    )}</output`;
+
+    const FLAT_IO_BASIC_SCORE_JSON_TEMPLATE = {
+      "score-partwise": {
+        "part-list": {
+          "score-part": [
+            {
+              "part-name": "",
+              "voiceMapping": { "0": [0] },
+              "staffMapping": [
+                {
+                  "mainVoiceIdx": 0,
+                  "voices": [0],
+                  "staffUuid": "staffUuid"
+                }
+              ],
+              "voiceIdxToUuidMapping": {
+                "0": "voiceUuid"
+              },
+              "voiceUuidToIdxMapping": {
+                "voiceUuid": 0
+              },
+              "part-abbreviation": "",
+              "score-instrument": {
+                "instrument-name": "",
+                "$id": "P1-I1"
+              },
+
+              "$id": "P1",
+              "uuid": "P1"
+            }
+          ]
+        },
+        "part": [
+          {
+            "measure": [
+              {
+                "note": [],
+                "$number": "1",
+                "barline": {
+                  "bar-style": "light-heavy",
+                  "noteBefore": 4
+                },
+                "attributes": [
+                  {
+                    "time": { "beats": "5", "beat-type": "4" },
+                    "clef": { },
+                    "key": {  },
+                    "staff-details": { "staff-lines": "5" }
+                  }
+                ]
+              }
+            ],
+            "$id": "P1",
+            "uuid": "P1"
+          }
+        ]
+      }
+    }
+
+    // JSON representation exported from a flatio embed obj that is rendering the 5 notes for the tonic chord scale in the correct key
+    const tonicChordScalePitchesFlatScoreJSON = await embedTransposed(
+      tonicBucket,
+      tonicEmbed,
+      FLAT_IO_BASIC_SCORE_JSON_TEMPLATE,
+      keySignature,
+      instrName,
+      octaveShift
+    );
+    const subdominantChordScalePitchesFlatScoreJSON = await embedTransposed (
+      subdominantBucket,
+      subdominantEmbed,
+      FLAT_IO_BASIC_SCORE_JSON_TEMPLATE,
+      keySignature,
+      instrName,
+      octaveShift
+    );
+    const dominantChordScalePitchesFlatScoreJSON = await embedTransposed (
+      dominantBucket,
+      dominantEmbed,
+      FLAT_IO_BASIC_SCORE_JSON_TEMPLATE,
+      keySignature,
+      instrName,
+      octaveShift
+    );
+    
+  return {
+    tonic: tonicChordScalePitchesFlatScoreJSON, 
+    subdominant:  subdominantChordScalePitchesFlatScoreJSON, 
+    dominant:  dominantChordScalePitchesFlatScoreJSON
+  }
+}
 
 const pitchesToRests = (pieceScoreJSON) => {
   const getMeasureTimeSignature = (measure, current) => {
@@ -529,6 +594,6 @@ const pitchesToRests = (pieceScoreJSON) => {
       };
     });
   });
-  console.log("composeScoreJSON", composeScoreJSON);
+  // console.log("composeScoreJSON", composeScoreJSON);
   return composeScoreJSON;
 };
