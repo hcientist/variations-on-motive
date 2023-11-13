@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="https://fav.farm/🎙️" >
+  <title>Mike checks mic check 🎤✅</title>
+</head>
+
+<body>
+  <h1>Mike Checks Mic Check</h1>
+  <section>
+    <h2>❌echoCancellation ✅noiseSuppression</h2>
+    <button type="button" id="start">Start Recording ⏺️</button>
+    <button type="button" id="stop">Stop Recording 🛑</button>
+    
+    <section id="sound-clips"></section>
+  </section>
+  <nav>
+    <ol>
+      <li><a href="1.html">Default (with both ✅echoCancellation and ✅noiseSuppression)</a></li>
+      <li><a href="2.html">❌echoCancellation ✅noiseSuppression</a></li>
+      <li><a href="3.html">✅echoCancellation ❌noiseSuppression</a></li>
+      <li><a href="4.html">❌echoCancellation ❌noiseSuppression</a></li>
+    </ol>
+  </nav>
+  <script src="mic-recorder-ro-mp3.js"></script>
+  <script>
+    let stream = null;
+    let mediaRecorder = null;
+    let chunks = [];
+
+    let mc = new MicRecorder({
+      audio: {
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: true,
+        }
+      }
+    })
+
+
+    // let recorder = new MicRecorder();
+
+    const startBtn = document.getElementById('start');
+    const stopBtn = document.getElementById('stop');
+    const soundClips = document.getElementById('sound-clips');
+
+    startBtn.addEventListener('click', record);
+    stopBtn.addEventListener('click', stop);
+
+    async function record() {
+      console.log('record');
+
+      // Start recording. Browser will request permission to use your microphone.
+      mc.start().then(() => {
+        // something else
+      }).catch((e) => {
+        console.error(e);
+      });
+    }
+
+    async function stop() {
+      console.log('stop recording')
+
+      // Once you are done singing your best song, stop and get the mp3.
+      mc
+        .stop()
+        .getMp3().then(([buffer, blob]) => {
+          // do what ever you want with buffer and blob
+          // Example: Create a mp3 file and play
+          const clipName = prompt("Enter a name for your sound clip");
+          const file = new File(buffer, `${clipName}.mp3`, {
+            type: blob.type,
+            lastModified: Date.now()
+          });
+
+          const clipContainer = document.createElement("article");
+          const clipLabel = document.createElement("p");
+          const audio = document.createElement("audio");
+          const link = document.createElement("a");
+          const deleteButton = document.createElement("button");
+
+          clipContainer.classList.add("clip");
+          audio.setAttribute("controls", "");
+          // audio.src = window.URL.createObjectURL(blob);
+          audio.src = window.URL.createObjectURL(file);
+          deleteButton.innerHTML = "Delete";
+          clipLabel.innerHTML = clipName;
+
+          clipContainer.appendChild(audio);
+          clipContainer.appendChild(clipLabel);
+          clipContainer.appendChild(deleteButton);
+          soundClips.appendChild(clipContainer);
+
+
+          deleteButton.onclick = (e) => {
+            let evtTgt = e.target;
+            evtTgt.parentNode.parentNode.removeChild(evtTgt.parentNode);
+          };
+          // const player = new Audio(URL.createObjectURL(file));
+          // player.play();
+
+        }).catch((e) => {
+          alert('We could not retrieve your message');
+          console.log(e);
+        });
+      console.log("recorder stopped");
+      startBtn.style.background = "";
+      startBtn.style.color = "";
+
+    }
+  </script>
+  </body>
+  
+  </html>
