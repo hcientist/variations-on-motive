@@ -59,6 +59,7 @@
       }
     })
 
+
     const createEmbed = (containerElemId, scoreId, sharingKey) => {
       const motiveContainer = document.getElementById(containerElemId);
       const motiveEmbed = new Flat.Embed(motiveContainer, {
@@ -79,37 +80,170 @@
     };
 
     const originalMotiveEmbed = createEmbed(deepRiverEb.id, deepRiverEb.scoreId, deepRiverEb.sharingKey)
+    const composeMotiveEmbed = createEmbed(deepRiverEb.id, deepRiverEb.scoreId, deepRiverEb.sharingKey)
+
+    let copyIndex;
+    let currentIndex = 0;
+    let currentNotes;
+    let selectedNotes;
+    let previousData = null;
+    let previousSelectedIndex = null;
+    let refresh = false;
+    let usedMeasures = []
+    let destinationToOrginalMeasure = new Map()
+
+    const bucketColors = ["#E75B5C", "#265C5C", "#4390E2"];
+    const BLACK = '#000000'
+    const ORANGE = '#f5bd1f'
 
 
-    originalMotiveEmbed
+    originalMotiveEmbed.then((motiveEmbed) => {
+      motiveEmbed.getJSON().then((result) => {
+
+        result['score-partwise'].part[0].measure = colorMeasures(result['score-partwise'].part[0].measure, "rgbrgb"); // Testing the colorMeasures function.
+
+        currentNotes = []
+        const allFlatEvents = [
+          'cursorPosition',
+        ]
+        /**
+         *  This is the listener for every click that occurs on the original notes. 
+         *  In our case we only care for cursorPosition. (which we stored above in allFlatEevents) cursorPosition just returns the last
+         *  place the user had click on a note in the original measure.
+        **/
+        allFlatEvents.forEach(eventName => motiveEmbed.on(eventName, function (...args) {
+          currentNotes = [];
+          for (let arg of args) {
+            currentIndex = arg.measureIdx;
+          }
+
+          /**
+           *  An issue we ran into at first, whenever we were to loadJSON, we would fire the eventListener again for our click.
+           *  It would make it so we weren't able to highlight because we would be deselecting, so we used a timeout and a boolean
+           *  to make sure that we can only fire once per click. The code for the timeout starts on Line 153. 
+          **/
+          if (!refresh) {
+            refresh = true; // Allows only one action event.
+            let usedAllMeasures = 0;
+            while (usedMeasures.includes(currentIndex) && usedAllMeasures < result['score-partwise'].part[0].measure.length) { // If we try and select a measure we already have, automatically go to the next available. 
+              currentIndex = (currentIndex + 1) % result['score-partwise'].part[0].measure.length;
+              usedAllMeasures += 1;
+            }
+
+            if (usedAllMeasures < result['score-partwise'].part[0].measure.length) {
+              /**
+               *  We save our selected notes into an array called currentNotes. From there we color the selection to the ORANGE variable and save it to our Promise.
+               *  We store our selections in an array called selectedNotes, which our listener for our composedEmbed will use. (Tuples don't exist in JS apparently so used an array)
+               *  Afterwards we check to see there are any previous selected notes, which if there are, we revert those back to BLACK (indicating that they're not selected).
+               *  ***IMPORTANT*** IN CURRENT IMPLEMENTATION WE DO NOT HAVE THE ABILITY TO DESELECT, THERE WILL ALWAYS BE A MEASURE SELECTED
+              **/
+              for (let i = 0; i < result['score-partwise'].part[0].measure[currentIndex].note.length; i++) {
+                currentNotes[i] = result['score-partwise'].part[0].measure[currentIndex].note[i];
+              }
+              colorNotes(currentNotes, ORANGE);
+              result['score-partwise'].part[0].measure[currentIndex].note = currentNotes;
+              selectedNotes = [currentNotes, currentIndex];
+              if (previousSelectedIndex !== null && currentIndex != previousSelectedIndex) {
+                colorNotes(result['score-partwise'].part[0].measure[previousSelectedIndex].note, BLACK);
+                previousSelectedIndex = currentIndex;
+              }
+            }
+          }
+
+          /**
+           * We want to compare our previousData and updatedData, since we don't want to waste time loading if we haven't made any changes.
+           * We update our previously selected index, and also set a timeout to make sure we don't get stuck in a infinite loop that keeps calling loadJSON().
+           * The else if statement is so we don't deselect.
+          **/
+          const updatedData = JSON.stringify(result);
+          if (updatedData !== previousData) {
+            motiveEmbed.loadJSON(result);
+            setTimeout(() => {
+              refresh = false;
+            }, 750);
+            previousData = updatedData;
+            previousSelectedIndex = currentIndex
+          }
+          else if (currentIndex == previousSelectedIndex) {
+            setTimeout(() => {
+              refresh = false;
+            }, 750);
+          }
+        }));
+
+
+        /**
+         *  Engages our listener for our composeEmbed. We get the index where the user clicked to paste their selected index.
+         *  From there, we check to see if they have a valid selection of notes, and also a valid location to paste to.
+         *  We use our array of notes and index (our fake tuple from before), and paste them into our location. After we paste
+         *  we make sure to update our map and array that is storing our used indexs for both the original and compose embeds.
+         *  If we decide to overrite notes on the given composeEmbed, we need to also allow the user to be able to select the used
+         *  notes on the original, which is what we used the map for.
+        **/
+        allFlatEvents.forEach(eventName => composeEmbed.on(eventName, function (...args) {
+          for (let arg of args) {
+            copyIndex = arg.measureIdx
+          }
+          if (copyIndex != null && selectedNotes != null) {
+            composeEmbed.getJSON().then((result) => {
+              result['score-partwise'].part[0].measure[copyIndex].note = selectedNotes[0];
+              colorNotes(result['score-partwise'].part[0].measure[copyIndex].note, BLACK)
+              usedMeasures.push(selectedNotes[1])
+              if (destinationToOrginalMeasure.has(copyIndex)) {
+                usedMeasures = usedMeasures.filter(index => index !== destinationToOrginalMeasure.get(copyIndex))
+              }
+              destinationToOrginalMeasure.set(copyIndex, selectedNotes[1])
+              selectedNotes = null
+              copyIndex = null
+              composeEmbed.loadJSON(result);
+            });
+          };
+        }));
+      });
+    });
+
+
+    composeMotiveEmbed
       .then((embed) => embed.getJSON())
       .then(pitchesToRests)
       .then((composeScoreJSON) => {
-        return composeEmbed.loadJSON(composeScoreJSON)
+        return composeEmbed.loadJSON(composeScoreJSON);
       })
 
-    originalMotiveEmbed.then((embed) => {
-      const allFlatEvents = [
-        // 'scoreLoaded',
-        'cursorPosition',
-        // 'cursorContext',
-        // 'measureDetails',
-        // 'noteDetails',
-        // 'rangeSelection',
-        // 'fullscreen',
-        // 'play',
-        // 'pause',
-        // 'stop',
-        // 'playbackPosition'
-      ]
-      allFlatEvents.forEach(eventName => embed.on(eventName, function (...args) {
-        console.log(eventName);
-        for (let arg of args)
-          console.log(arg.measureIdx)
-      }));
 
+    /**
+     * Colors an array of notes to a given hex color attribute.
+    **/
+    const colorNotes = (notes, color) => {
+      for (let i = 0; i < notes.length; i++) {
+        notes[i]['$color'] = color;
+      }
+    }
 
-    })
+    /**
+     *  Given a measure, and a string consisting of "rgbgrb..." we match the notes of the corresponding measure to that value.
+     *  For example, given a measure (1,2,3) and a string "rgb", the first measure would be colored red, second would be green, third would be green.
+    **/
+    const colorMeasures = (measure, colorString) => {
+      let colorIndex = 0;
+      for (let i = 0; i < measure.length; i++) {
+        if (colorString[colorIndex] == 'r') {
+          colorNotes(measure[i].note, bucketColors[0]);
+        }
+        else if (colorString[colorIndex] == 'g') {
+          colorNotes(measure[i].note, bucketColors[1]);
+        }
+        else if (colorString[colorIndex] == 'b') {
+          colorNotes(measure[i].note, bucketColors[2]);
+        }
+        else {
+          colorNotes(measure[i], BLACK);
+        }
+        colorIndex += 1;
+      }
+      return measure;
+    }
+
 
 
   </script>
